@@ -98,29 +98,39 @@ void Sensors::begin () {
 
 
 	//initialise BME280
-	if (config.iBME_TYP == BOSCH_BME280) {
+        if (config.iBME_TYP == BOSCH_BME280) {
 
-		// uint8_t I2CAddress = (unsigned int)config_ADDR;
+                uint8_t activeAddress = 0x77; 
+                _message.serialPrintf("Initialising BME280: Attempting Address 0x77...\n");        
 
-		_message.serialPrintf("Initialising BME280: ( Address: %u )\n", config.iBME_ADDR);	
-		
-		if (_BME280Sensor.beginI2C((int)config.iBME_ADDR) == false) {
-			_message.serialPrintf("BME sensor did not respond. \n");
-			_message.serialPrintf("Please check wiring and I2C address\n");
-			_message.serialPrintf("BME I2C address %s set in configuration.h. \n", config.iBME_ADDR);
-			while(1); //Freeze
-		} else {
-			_message.serialPrintf("BME280 Initialised\n");
-		}
+                // First attempt at 0x77
+                if (_BME280Sensor.beginI2C(activeAddress) == false) {
+                        
+                        // If 0x77 fails, switch to 0x76 and try again
+                        activeAddress = 0x76;
+                        _message.serialPrintf("- Not found at 0x77. Attempting Address 0x76...\n");
+                        
+                        // Second attempt at 0x76
+                        if (_BME280Sensor.beginI2C(activeAddress) == false) {
+                                // Both attempts failed, throw the standard error and freeze
+                                _message.serialPrintf("BME sensor did not respond. \n");
+                                _message.serialPrintf("Please check wiring and I2C address\n");
+                                _message.serialPrintf("Attempted both 0x77 and 0x76 without success. \n");
+                                while(1); //Freeze
+                        }
+                }
+                
+                // If either attempt succeeds, it skips the freeze and continues here
+                _message.serialPrintf("BME280 Initialised successfully at 0x%02X\n", activeAddress);
 
-		_BME280Sensor.setTempOverSample(1);
-		_BME280Sensor.setPressureOverSample(1);
-		_BME280Sensor.setHumidityOverSample(1);
-		_BME280Sensor.setStandbyTime(0);
-		_BME280Sensor.setFilter(0);
-		_BME280Sensor.setMode(tiny::Mode::NORMAL); // NORMAL / FORCED / SLEEP
+                _BME280Sensor.setTempOverSample(1);
+                _BME280Sensor.setPressureOverSample(1);
+                _BME280Sensor.setHumidityOverSample(1);
+                _BME280Sensor.setStandbyTime(0);
+                _BME280Sensor.setFilter(0);
+                _BME280Sensor.setMode(tiny::Mode::NORMAL); // NORMAL / FORCED / SLEEP
 
-	}
+        }
 
 
 	//initialise BME680
