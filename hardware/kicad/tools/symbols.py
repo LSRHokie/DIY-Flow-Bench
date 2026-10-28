@@ -103,12 +103,14 @@ def load(project, libdir):
         bottom=[('4', 'GND', 'power_in'), ('9', 'PAD', 'passive')],
         footprint='Package_SO:MSOP-8-1EP_3x3mm_P0.65mm_EP1.68x1.88mm_ThermalVias',
         datasheet='https://www.ti.com/lit/ds/symlink/tps7a49.pdf', description='36 V low-noise LDO, adjustable'))
-    S['ABP2_I2C'] = project.sym(rect_symbol(   # Honeywell ABP2 datasheet: DIP, I2C output
+    S['ABP2_I2C'] = project.sym(rect_symbol(   # Honeywell ABP2 datasheet 32350268, Table 21 (I2C sensor)
         'ABP2_I2C', 'U',
-        left=[('6', 'NC', 'no_connect'), ('3', 'EOC', 'output')],
-        right=[('4', 'SDA', 'bidirectional'), ('2', 'SCL', 'input')],
-        top=[('1', 'VDD', 'power_in')], bottom=[('5', 'GND', 'power_in')],
-        footprint='', description='Honeywell ABP2 pressure sensor, I2C, DIP. VERIFY PINOUT before layout'))
+        left=[('4', 'NC', 'no_connect'), ('3', 'EOC', 'output')],
+        right=[('5', 'SDA', 'bidirectional'), ('6', 'SCL', 'input')],
+        top=[('2', 'VDD', 'power_in')], bottom=[('1', 'GND', 'power_in')],
+        footprint='FlowBench:Honeywell_ABP2_DIP',
+        datasheet='https://automation.honeywell.com/us/en/products/sensing-solutions/sensors/pressure-sensors/board-mount-pressure-sensors/basic-abp2-series',
+        description='Honeywell ABP2 pressure sensor, DIP, I2C: 1 GND, 2 VDD, 3 EOC, 4 NC, 5 SDA, 6 SCL'))
     S['Pololu_D24V22Fx'] = project.sym(rect_symbol(
         'Pololu_D24V22Fx', 'PS',
         left=[('3', 'VIN', 'power_in'), ('2', 'EN', 'input')],

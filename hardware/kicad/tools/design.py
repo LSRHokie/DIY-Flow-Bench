@@ -180,8 +180,8 @@ def main_board(libdir):
         b.R('4.7k', '+3V3', 'MUX%d_SDA' % ch)
         b.R('4.7k', '+3V3', 'MUX%d_SCL' % ch)
     for ch, name in enumerate(['Reference', 'Orifice', 'Pitot']):
-        b.part('U', 'ABP2_I2C', 'ABP2DRRN100MD2A3XX', {1: '+3V3', 2: 'MUX%d_SCL' % ch, 3: None, 4: 'MUX%d_SDA' % ch,
-               5: 'GND', 6: None}, fields={'Function': name + ' pressure'})
+        b.part('U', 'ABP2_I2C', 'ABP2DRRN100MD2A3XX', {1: 'GND', 2: '+3V3', 3: None, 4: None,
+               5: 'MUX%d_SDA' % ch, 6: 'MUX%d_SCL' % ch}, fields={'Function': name + ' pressure'})
         b.C('100nF', '+3V3')
     b.CONN(4, 'BME280 (GX12-4)', ['+3V3', 'GND', 'MUX3_SDA', 'MUX3_SCL'], mc(4))
     b.part('U', 'ADS1219', 'ADS1219 #1 (0x40)', {11: 'MAF_SIG_ADC', 10: 'MAF_IAT_ADC', 7: 'MON_5VA', 6: 'MON_24V',

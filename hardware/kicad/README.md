@@ -27,7 +27,7 @@ Notes at the top of each sheet explain the design choices on that sheet. `netlis
 Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye:
 
 1. **Pololu D24V22F5 / F12:** pinout confirmed from the board (PG, EN, VIN, GND, VOUT down one edge, plus a corner GND level with PG). Its footprint is `FlowBench:Pololu_D24V22Fx` in the project's own footprint library. The corner pad sits 0.4 in from the row, read from Pololu's photo: check it with a caliper before ordering boards.
-2. **ABP2 pinout and footprint:** from Honeywell's I2C table (1 VDD, 2 SCL, 3 EOC, 4 SDA, 5 GND, 6 NC). KiCad has no ABP2 footprint; one has to be drawn from the datasheet.
+2. **ABP2:** pinout from Honeywell datasheet 32350268, Table 21 (I2C: 1 GND, 2 VDD, 3 EOC, 4 NC, 5 SDA, 6 SCL). Footprint `FlowBench:Honeywell_ABP2_DIP` from Figure 13: 2.54 mm pitch, rows 11.00 mm apart, 0.73 mm holes. The barbed ports leave the body on the pin 3/4 side; leave room there for the tubing.
 3. **WIZ850io:** confirmed from the module (20 × 25 mm, two 1 × 6 headers). One part and one footprint, `FlowBench:WIZ850io`: J1 is pads 1–6, J2 is pads 7–12, rows 17.78 mm (0.7 in) apart, pin 1 nearest the RJ45. Place it with the jack facing the board edge.
 4. **DevKit:** header pinout confirmed against Espressif's J1/J3 tables, row spacing measured at 25.4 mm (1.0 in). One part and one footprint, `FlowBench:ESP32-S3-DevKitC-1`: J1 is pads 1–22, J3 is pads 23–44, pin 1 at the antenna end. Let the antenna overhang the board edge or keep copper out from under it. The N32R16V variant fits the same footprint.
 5. **Custom symbols** drawn from datasheets: ADS1219 (TSSOP-16), AM26C31 (SOIC-16), TPS7A4901 (MSOP-8 PowerPAD). Worth one look each against the datasheet pin table.

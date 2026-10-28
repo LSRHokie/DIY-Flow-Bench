@@ -101,9 +101,9 @@ net,ref,pin,pin_name,sheet
 +3V3,U3,8,J2-2 3V3D,Network and storage
 +3V3,U3,9,J2-3 3V3D,Network and storage
 +3V3,U4,24,VCC,Sensors and ADC
-+3V3,U5,1,VDD,Sensors and ADC
-+3V3,U6,1,VDD,Sensors and ADC
-+3V3,U7,1,VDD,Sensors and ADC
++3V3,U5,2,VDD,Sensors and ADC
++3V3,U6,2,VDD,Sensors and ADC
++3V3,U7,2,VDD,Sensors and ADC
 +3V3,U8,13,DVDD,Sensors and ADC
 +3V3,U9,1,A0,Sensors and ADC
 +3V3,U9,13,DVDD,Sensors and ADC
@@ -523,9 +523,9 @@ GND,U4,1,A0,Sensors and ADC
 GND,U4,12,GND,Sensors and ADC
 GND,U4,2,A1,Sensors and ADC
 GND,U4,21,A2,Sensors and ADC
-GND,U5,5,GND,Sensors and ADC
-GND,U6,5,GND,Sensors and ADC
-GND,U7,5,GND,Sensors and ADC
+GND,U5,1,GND,Sensors and ADC
+GND,U6,1,GND,Sensors and ADC
+GND,U7,1,GND,Sensors and ADC
 GND,U8,1,A0,Sensors and ADC
 GND,U8,2,A1,Sensors and ADC
 GND,U8,4,DGND,Sensors and ADC
@@ -647,22 +647,22 @@ MON_5VA,R41,1,~,Sensors and ADC
 MON_5VA,U8,7,AIN2,Sensors and ADC
 MUX0_SCL,R30,2,~,Sensors and ADC
 MUX0_SCL,U4,5,SC0,Sensors and ADC
-MUX0_SCL,U5,2,SCL,Sensors and ADC
+MUX0_SCL,U5,6,SCL,Sensors and ADC
 MUX0_SDA,R29,2,~,Sensors and ADC
 MUX0_SDA,U4,4,SD0,Sensors and ADC
-MUX0_SDA,U5,4,SDA,Sensors and ADC
+MUX0_SDA,U5,5,SDA,Sensors and ADC
 MUX1_SCL,R32,2,~,Sensors and ADC
 MUX1_SCL,U4,7,SC1,Sensors and ADC
-MUX1_SCL,U6,2,SCL,Sensors and ADC
+MUX1_SCL,U6,6,SCL,Sensors and ADC
 MUX1_SDA,R31,2,~,Sensors and ADC
 MUX1_SDA,U4,6,SD1,Sensors and ADC
-MUX1_SDA,U6,4,SDA,Sensors and ADC
+MUX1_SDA,U6,5,SDA,Sensors and ADC
 MUX2_SCL,R34,2,~,Sensors and ADC
 MUX2_SCL,U4,9,SC2,Sensors and ADC
-MUX2_SCL,U7,2,SCL,Sensors and ADC
+MUX2_SCL,U7,6,SCL,Sensors and ADC
 MUX2_SDA,R33,2,~,Sensors and ADC
 MUX2_SDA,U4,8,SD2,Sensors and ADC
-MUX2_SDA,U7,4,SDA,Sensors and ADC
+MUX2_SDA,U7,5,SDA,Sensors and ADC
 MUX3_SCL,J5,4,Pin_4,Sensors and ADC
 MUX3_SCL,R36,2,~,Sensors and ADC
 MUX3_SCL,U4,11,SC3,Sensors and ADC

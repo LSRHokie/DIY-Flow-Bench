@@ -110,4 +110,35 @@ def devkitc1():
     return '\n'.join(out) + '\n'
 
 
-ALL = {'Pololu_D24V22Fx': pololu_d24v22fx, 'WIZ850io': wiz850io, 'ESP32-S3-DevKitC-1': devkitc1}
+def abp2_dip():
+    """Honeywell ABP2, DIP package, all port styles except DA (datasheet 32350268).
+
+    Figure 13 recommended PCB layout (top view): pins 1-2-3 in one row and 6-5-4
+    in the other (pin 4 opposite pin 3), 2.54 mm pitch, rows 11.00 mm apart,
+    6 holes 0.73 mm for 0.46 mm leads. Body 8.20 x 11.25 mm. Figure 10 (DIP RR):
+    the two barbed ports leave the body on the side of pins 3 and 4.
+    """
+    p, row = 2.54, 11.0
+    cx, cy = p, row / 2
+    bx0, bx1, by0, by1 = cx - 4.1, cx + 4.1, cy - 5.625, cy + 5.625
+    out = ['(footprint "Honeywell_ABP2_DIP" (version 20221018) (generator kicadgen) (layer "F.Cu")',
+           '  (descr "Honeywell ABP2 DIP (ports other than DA), 6 pins, 2.54 mm pitch, rows 11.00 mm, per datasheet Figure 13")',
+           '  (tags "Honeywell ABP2 pressure sensor DIP")',
+           '  (attr through_hole)',
+           '  (fp_text reference "REF**" (at %g %g) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))' % (cx, by0 - 1.6),
+           '  (fp_text value "ABP2 DIP" (at %g %g) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))' % (cx, cy),
+           _rect(bx0, by0, bx1, by1, 'F.Fab', 0.1),
+           _rect(bx0 - 0.15, by0 - 0.15, bx1 + 0.15, by1 + 0.15, 'F.SilkS', 0.12),
+           _rect(bx0 - 0.5, by0 - 0.5, bx1 + 6.0, by1 + 0.5, 'F.CrtYd', 0.05),
+           '  (fp_text user "PORTS" (at %g %g 90) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))' % (bx1 + 1.2, cy),
+           '  (fp_circle (center %g %g) (end %g %g) (stroke (width 0.12) (type solid)) (fill none) (layer "F.SilkS"))'
+           % (-1.6, -1.2, -1.35, -1.2)]
+    pads = [('1', 0, 0), ('2', p, 0), ('3', 2 * p, 0), ('4', 2 * p, row), ('5', p, row), ('6', 0, row)]
+    for num, x, y in pads:
+        out.append(_pad(num, x, y, 'rect' if num == '1' else 'circle', size=1.3, drill=0.73))
+    out.append(')')
+    return '\n'.join(out) + '\n'
+
+
+ALL = {'Pololu_D24V22Fx': pololu_d24v22fx, 'WIZ850io': wiz850io, 'ESP32-S3-DevKitC-1': devkitc1,
+       'Honeywell_ABP2_DIP': abp2_dip}
