@@ -81,13 +81,13 @@ The WIZ850io Ethernet module (W5500) plugs into the main board and has the SPI b
 | 0x21 | TCA9535 #2 | Lift stepper and its limit switches |
 | 0x30 | ATtiny1616 Digimatic interface | Reads the lift indicator |
 | 0x40 | ADS1219 #1 | MAF, intake air temperature, rail checks |
+| 0x41 | ADS1219 #2 | MAF harness ID, input current (eFuse IMON). On the main bus: at 0x40 behind the mux it would clash with #1 |
 | 0x70 | TCA9548A | I2C multiplexer |
 | 0x28 via mux ch0 | ABP2 | Reference (test) pressure |
 | 0x28 via mux ch1 | ABP2 | Orifice differential pressure |
 | 0x28 via mux ch2 | ABP2 | Pitot differential pressure |
 | 0x77 via mux ch3 | SparkFun BME280 | Temperature, humidity, baro (external cable) |
-| 0x40 via mux ch4 | ADS1219 #2 | MAF harness ID, spare analog |
-| mux ch5–7 | Spare | |
+| mux ch4–7 | Spare | |
 
 ## ADS1219 channels
 
@@ -98,7 +98,8 @@ The WIZ850io Ethernet module (W5500) plugs into the main board and has the SPI b
 | #1 | AIN2 | Analog 5 V rail check, 1/4 divider | Internal 2.048 V |
 | #1 | AIN3 | 24 V input monitor, 1/16 divider | Internal 2.048 V |
 | #2 | AIN1 | MAF harness ID resistor (10 k bias) | External analog 5 V |
-| #2 | AIN0, AIN2, AIN3 | Spare | — |
+| #2 | AIN0 | Input current from the power module (TPS2663 IMON, 10 k: about 1.7 V at 6 A) | Internal 2.048 V |
+| #2 | AIN2, AIN3 | Spare (test points) | — |
 
 ## MAF harness ID resistors
 

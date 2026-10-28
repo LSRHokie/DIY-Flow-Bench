@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "filename": "flowbench-main.kicad_pro",
+    "version": 1
+  },
+  "sheets": [
+    [
+      "132431a4-6ccd-4deb-a1e9-9797cfc2cdf2",
+      ""
+    ],
+    [
+      "bdfdd190-27c3-4bc9-a777-7658390ab1f2",
+      "Power"
+    ],
+    [
+      "a3e77ddf-1815-4e9d-bd7e-a2f9fc3f67e3",
+      "Controller"
+    ],
+    [
+      "8c16a7d6-2a7c-4459-a67a-9f4f1b1197d2",
+      "Network and storage"
+    ],
+    [
+      "d3fe7c7f-2c6d-44a6-ba9e-9eb4eb770078",
+      "Sensors and ADC"
+    ],
+    [
+      "e88b05e4-89cd-4998-a5db-84357fd42c73",
+      "Field inputs"
+    ],
+    [
+      "9e8ebd4d-3fd4-43cf-9e09-90bde4004209",
+      "IO and safety"
+    ]
+  ],
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "boards": [],
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "text_variables": {}
+}
