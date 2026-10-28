@@ -43,6 +43,14 @@ for proj in ['flowbench-main', 'flowbench-power-module']:
         for lab in list(s.labels) + list(s.globalLabels):
             names.setdefault(find((r(lab.position.X), r(lab.position.Y))), set()).add(lab.text)
         ncs = {(r(n.position.X), r(n.position.Y)) for n in s.noConnects}
+        def off(v):
+            return abs(v / 1.27 - round(v / 1.27)) > 1e-3
+        for pos in pinpos:
+            if off(pos[0]) or off(pos[1]):
+                print('  pin off the 1.27 mm grid', fn, pos, pinpos[pos]); ok = False
+        for w in s.graphicalItems:
+            if getattr(w, 'type', '') == 'wire' and any(off(pt.X) or off(pt.Y) for pt in w.points):
+                print('  wire end off the 1.27 mm grid', fn, [(pt.X, pt.Y) for pt in w.points]); ok = False
         for pos, pins in pinpos.items():
             k = find(pos)
             if k in names:
