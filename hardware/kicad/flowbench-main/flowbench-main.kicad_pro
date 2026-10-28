@@ -5,31 +5,31 @@
   },
   "sheets": [
     [
-      "0dc6c7f5-6097-483f-bb8e-27170af873c4",
+      "6f997f2c-65b5-4504-996b-548df9139c9f",
       ""
     ],
     [
-      "3e45a1e5-5411-4839-b929-83cf2867e692",
+      "44f71a1d-1f5e-407c-b284-885994c97603",
       "Power"
     ],
     [
-      "86cf4e4d-13d9-4069-9e1b-3bcb27dffa88",
+      "2fb461a2-b626-4770-a3fb-8c80d6004ba4",
       "Controller"
     ],
     [
-      "539dcf79-1156-4b21-9aa6-0d975620130e",
+      "4ddd60d9-12d1-403d-9148-aa71dff8681a",
       "Network and storage"
     ],
     [
-      "5b2923ff-06b0-4370-8a3e-e8a9dfa10e49",
+      "6a62dbd3-2143-47bf-9aea-bfe7502e3b0b",
       "Sensors and ADC"
     ],
     [
-      "b8330817-3ce0-4381-bf3e-6de58ab18723",
+      "695ed618-7eda-49a0-8dfa-11903d2d7fd8",
       "Field inputs"
     ],
     [
-      "75cd111f-e7e4-45af-91f0-1811d8be77dd",
+      "f8021bb1-4a4b-4cd2-9b24-6144e0cd682e",
       "IO and safety"
     ]
   ],
