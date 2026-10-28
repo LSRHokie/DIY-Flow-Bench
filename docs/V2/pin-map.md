@@ -1,0 +1,117 @@
+# DIY Flow Bench V2.0 — ESP32-S3 pin map
+
+Controller: **ESP32-S3-DevKitC-1-N32R8V** (ESP32-S3-WROOM-2-N32R8V module: 32 MB octal flash, 8 MB octal PSRAM, 1.8 V SPI).
+
+All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go through two TCA9535 I2C expanders. Analog inputs use ADC1 only, because ADC2 (GPIO11–20) can't be read while Wi-Fi is on.
+
+## GPIO
+
+| GPIO | Header pin | Function | Dir | Peripheral | Notes |
+| --- | --- | --- | --- | --- | --- |
+| 0 | J3-14 | BOOT button | in | — | Strapping (boot mode). Not used. |
+| 1 | J3-4 | Motor 1 current | in | ADC1 ch0 | CT, 1.65 V bias |
+| 2 | J3-5 | Motor 2 current | in | ADC1 ch1 | CT, 1.65 V bias |
+| 3 | J1-13 | Bleed stepper alarm | in | GPIO interrupt | Opto input. Strapping (JTAG source); only read if that eFuse is burned |
+| 4 | J1-4 | Motor 3 current | in | ADC1 ch3 | CT, 1.65 V bias |
+| 5 | J1-5 | Motor 4 current | in | ADC1 ch4 | CT, 1.65 V bias |
+| 6 | J1-6 | Motor 5 current | in | ADC1 ch5 | CT, 1.65 V bias |
+| 7 | J1-7 | Motor 6 current | in | ADC1 ch6 | CT, 1.65 V bias |
+| 8 | J1-12 | MAF frequency | in | PCNT unit 0 | Schmitt buffer, for frequency-output MAFs |
+| 9 | J1-15 | Swirl encoder A | in | PCNT unit 1 | Schmitt buffer, quadrature |
+| 10 | J1-16 | Swirl encoder B | in | PCNT unit 1 | Schmitt buffer, quadrature |
+| 11 | J1-17 | SPI MOSI | out | SPI2 | Shared: W5500 and microSD |
+| 12 | J1-18 | SPI SCK | out | SPI2 | Shared: W5500 and microSD |
+| 13 | J1-19 | SPI MISO | in | SPI2 | Shared: W5500 and microSD |
+| 14 | J1-20 | Ethernet CS | out | SPI2 | W5500 |
+| 15 | J1-8 | I2C SDA | i/o | I2C0, 400 kHz | ADCs, mux, expanders, Digimatic interface |
+| 16 | J1-9 | I2C SCL | out | I2C0 | 2.2 k pull-ups to 3.3 V |
+| 17 | J1-10 | Bleed stepper step (PUL) | out | RMT | To AM26C31 #1, 200 kHz max |
+| 18 | J1-11 | Bleed stepper direction | out | GPIO | To AM26C31 #1, set ≥5 µs before a step |
+| 19 | J3-20 | USB D− | — | Native USB | Flashing, console, JTAG |
+| 20 | J3-19 | USB D+ | — | Native USB | Flashing, console, JTAG |
+| 21 | J3-18 | Ethernet interrupt | in | GPIO interrupt | W5500 INT |
+| 35–37 | J3-13…11 | Not available | — | — | Used by the octal flash and PSRAM |
+| 38 | J3-10 | Status LED | out | RMT | RGB LED on the DevKit |
+| 39 | J3-9 | Lift stepper step (PUL) | out | RMT | To AM26C31 #2 |
+| 40 | J3-8 | Lift stepper direction | out | GPIO | To AM26C31 #2 |
+| 41 | J3-7 | microSD CS | out | SPI2 | microSD on the shared SPI bus |
+| 42 | J3-6 | Expander interrupt | in | GPIO interrupt | Both TCA9535 INT lines, open drain, wired together |
+| 43 | J3-2 | UART0 TX | out | UART0 | DevKit USB-UART port |
+| 44 | J3-3 | UART0 RX | in | UART0 | DevKit USB-UART port |
+| 45 | J3-15 | Not used | — | — | Strapping pin that sets flash voltage. Left unconnected. |
+| 46 | J1-14 | Heartbeat | out | GPIO | To hardware watchdog. Strapping pin; held low at boot |
+| 47 | J3-17 | Not used | — | — | Runs at 1.8 V on WROOM-2 modules |
+| 48 | J3-16 | Not used | — | — | Runs at 1.8 V on WROOM-2 modules |
+
+## TCA9535 I/O expander 1 (I2C 0x20)
+
+| Pin | Function | Dir | Power-up state |
+| --- | --- | --- | --- |
+| P00–P05 | Contactor coils 1–6 (TBD62083 inputs 1–6) | out | Off (pull-down) |
+| P06 | Motors-armed lamp (TBD62083 input 7) | out | Off (pull-down) |
+| P07 | Bleed stepper 24 V power switch | out | Off (pull-down) |
+| P10 | Bleed stepper enable (AM26C31 #1) | out | Disabled; polarity set at bring-up |
+| P11 | W5500 reset | out | Running (pull-up) |
+| P12 | E-stop status | in | Opto input |
+| P13 | Bleed valve home switch | in | Opto input |
+| P14–P16 | Orifice selector bits 0–2 | in | Opto inputs |
+| P17 | microSD card detect | in | Pull-up |
+
+## TCA9535 I/O expander 2 (I2C 0x21)
+
+| Pin | Function | Dir | Power-up state |
+| --- | --- | --- | --- |
+| P00 | Lift stepper 24 V power switch | out | Off (pull-down) |
+| P01 | Lift stepper enable (AM26C31 #2) | out | Disabled; polarity set at bring-up |
+| P02 | Lift stepper alarm | in | Opto input |
+| P03 | Lift actuator home switch | in | Opto input |
+| P04 | Lift actuator max-travel switch | in | Opto input |
+| P05–P17 | Spare | — | 11 pins free |
+
+## I2C devices (I2C0, GPIO15/16)
+
+| Address | Device | Purpose |
+| --- | --- | --- |
+| 0x20 | TCA9535 #1 | Coils, bleed stepper, switch inputs |
+| 0x21 | TCA9535 #2 | Lift stepper and its limit switches |
+| 0x30 | ATtiny1616 Digimatic interface | Reads the lift indicator |
+| 0x40 | ADS1219 #1 | MAF, intake air temperature, rail checks |
+| 0x70 | TCA9548A | I2C multiplexer |
+| 0x28 via mux ch0 | ABP2 | Reference (test) pressure |
+| 0x28 via mux ch1 | ABP2 | Orifice differential pressure |
+| 0x28 via mux ch2 | ABP2 | Pitot differential pressure |
+| 0x77 via mux ch3 | SparkFun BME280 | Temperature, humidity, baro (external cable) |
+| 0x40 via mux ch4 | ADS1219 #2 | MAF harness ID, spare analog |
+| mux ch5–7 | Spare | |
+
+## ADS1219 channels
+
+| ADC | Input | Signal | Reference |
+| --- | --- | --- | --- |
+| #1 | AIN0 | MAF signal 0–5 V, through a 0.4 divider | Internal 2.048 V |
+| #1 | AIN1 | MAF intake air temperature | External analog 5 V (ratiometric) |
+| #1 | AIN2 | Analog 5 V rail check, 1/4 divider | Internal 2.048 V |
+| #1 | AIN3 | 24 V input monitor, 1/16 divider | Internal 2.048 V |
+| #2 | AIN1 | MAF harness ID resistor (10 k bias) | External analog 5 V |
+| #2 | AIN0, AIN2, AIN3 | Spare | — |
+
+## MAF harness ID resistors
+
+10 kΩ bias to the analog 5 V, ID resistor from the ID pin to ground, 1%.
+
+| ID resistor | Reading | Assigned to |
+| --- | --- | --- |
+| 1.0 kΩ | 0.45 V | Bosch 0280218335 |
+| 1.5 kΩ | 0.65 V | |
+| 2.2 kΩ | 0.90 V | |
+| 3.3 kΩ | 1.24 V | |
+| 4.7 kΩ | 1.60 V | |
+| 6.8 kΩ | 2.02 V | |
+| 10 kΩ | 2.50 V | |
+| 15 kΩ | 3.00 V | |
+| 22 kΩ | 3.44 V | |
+| 33 kΩ | 3.84 V | |
+| 47 kΩ | 4.12 V | |
+| 68 kΩ | 4.36 V | |
+
+No resistor (5 V) reads as unknown; a short (0 V) is a wiring fault.

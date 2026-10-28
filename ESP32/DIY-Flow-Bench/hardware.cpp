@@ -666,7 +666,8 @@ double Hardware::get5vSupplyVolts() {
   } else {
     // long rawVoltageValue = readAnalog(pins.VCC_5V);  // Uses custom function to fix ADC2 + WiFi issue
     long rawVoltageValue = analogRead(pins.VCC_5V);  
-    vcc5vSupplyVolts = (2 * static_cast<double>(rawVoltageValue) * 0.805860805860806F) ;
+    // 10k/10k divider, 12-bit ADC at 3.3 V full scale: raw * 0.8059 = mV at the pin, x2 for the divider, /1000 for volts
+    vcc5vSupplyVolts = (2 * static_cast<double>(rawVoltageValue) * 0.805860805860806F) / 1000.0F;
     return vcc5vSupplyVolts + config.dVCC_5V_TRIM;
   }
 }
@@ -692,7 +693,8 @@ double Hardware::get3v3SupplyVolts() {
     return vcc3v3SupplyVolts; 
   } else {
     long rawVoltageValue = analogRead(pins.VCC_3V3 );  
-    vcc3v3SupplyVolts = (2 * static_cast<double>(rawVoltageValue) * 0.805860805860806F) ;
+    // 10k/10k divider, 12-bit ADC at 3.3 V full scale: raw * 0.8059 = mV at the pin, x2 for the divider, /1000 for volts
+    vcc3v3SupplyVolts = (2 * static_cast<double>(rawVoltageValue) * 0.805860805860806F) / 1000.0F;
     return vcc3v3SupplyVolts + config.dVCC_3V3_TRIM;
   }
 }
