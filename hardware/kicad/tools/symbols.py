@@ -118,12 +118,15 @@ def load(project, libdir):
     devkit_j3 = ['GND', 'TX/GPIO43', 'RX/GPIO44', 'GPIO1', 'GPIO2', 'GPIO42', 'GPIO41', 'GPIO40', 'GPIO39',
                  'GPIO38', 'GPIO37', 'GPIO36', 'GPIO35', 'GPIO0', 'GPIO45', 'GPIO48', 'GPIO47', 'GPIO21', 'GPIO20',
                  'GPIO19', 'GND', 'GND']
-    S['DevKitC-1_J1'] = project.sym(rect_symbol(
-        'DevKitC-1_J1', 'J', right=[(str(i + 1), n) for i, n in enumerate(devkit_j1)], footprint=socket(22),
-        description='ESP32-S3-DevKitC-1 header J1 (socket on the board)'))
-    S['DevKitC-1_J3'] = project.sym(rect_symbol(
-        'DevKitC-1_J3', 'J', left=[(str(i + 1), n) for i, n in enumerate(devkit_j3)], footprint=socket(22),
-        description='ESP32-S3-DevKitC-1 header J3 (socket on the board)'))
+    def dk_type(n):
+        return 'power_in' if n in ('5V', 'GND') else 'passive'
+    S['ESP32-S3-DevKitC-1'] = project.sym(rect_symbol(   # Espressif user guide, header tables J1 and J3
+        'ESP32-S3-DevKitC-1', 'U',
+        left=[(str(i + 1), 'J1-%d %s' % (i + 1, n), dk_type(n)) for i, n in enumerate(devkit_j1)],
+        right=[(str(i + 23), 'J3-%d %s' % (i + 1, n), dk_type(n)) for i, n in enumerate(devkit_j3)],
+        footprint='FlowBench:ESP32-S3-DevKitC-1',
+        datasheet='https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/user_guide.html',
+        description='ESP32-S3-DevKitC-1 (N32R8V or N32R16V) on two 1x22 sockets, rows 25.4 mm apart. J1 = pads 1-22, J3 = pads 23-44'))
     S['WIZ850io'] = project.sym(rect_symbol(   # WIZnet WIZ850io: J1 = pads 1-6, J2 = pads 7-12
         'WIZ850io', 'U',
         left=[('1', 'J1-1 GND', 'power_in'), ('2', 'J1-2 GND', 'power_in'), ('3', 'J1-3 MOSI', 'input'),

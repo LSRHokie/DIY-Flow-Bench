@@ -1,6 +1,6 @@
 "Group","Qty","Part","Ref","What it does","Package","Status"
-"Controller and network","1","ESP32-S3-DevKitC-1-N32R8V","U1","Controller. 32 MB octal flash, 8 MB PSRAM, on-board antenna. Plugs into female headers.","Dev board","Decided"
-"Controller and network","2","2 × 22-pin female header, 2.54 mm","U1","Socket for the DevKit.","Through-hole","Decided"
+"Controller and network","1","ESP32-S3-DevKitC-1-N32R8V","U1","Controller. 32 MB octal flash, 8 MB PSRAM, on-board antenna. Plugs into female headers. The current N32R16V (16 MB PSRAM) is a drop-in alternative.","Dev board","Decided"
+"Controller and network","2","2 × 22-pin female header, 2.54 mm","U1","Sockets for the DevKit, rows 25.4 mm (1.0 in) apart (footprint FlowBench:ESP32-S3-DevKitC-1).","Through-hole","Decided"
 "Controller and network","1","WIZnet WIZ850io","U2","W5500 Ethernet module with RJ45 jack and magnetics on board. Alone on the SPI bus, polled (its interrupt can be jumpered to expander 2 P06). Primary network link; Wi-Fi is the fallback. Plugs in, so it moves to a new board revision.","Module","Decided"
 "Controller and network","2","1 × 6-pin female header, 2.54 mm","U2","Sockets for the WIZ850io J1 and J2, rows 17.78 mm (0.7 in) apart (footprint FlowBench:WIZ850io).","Through-hole","Decided"
 "Controller and network","1","Push-push microSD socket","J2","Test logs and calibration files. On its own SD host bus in 1-bit mode (CLK, CMD, DAT0), not shared with the W5500. Card detect on expander 1. Pull-ups on CMD and DAT0–DAT3, 33 Ω on CLK.","SMD","Decided"

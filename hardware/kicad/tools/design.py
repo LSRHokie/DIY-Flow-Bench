@@ -118,7 +118,8 @@ def main_board(libdir):
 
     # ------------------------------------------------------------------ controller
     b.on(mcu)
-    mcu.note('The DevKit plugs into two 22-pin sockets. Its own 3V3 pins are left open: the board makes +3V3 separately.')
+    mcu.note('The DevKit plugs into two 22-pin sockets, rows 25.4 mm (1.0 in) apart: one footprint, J1 = pads 1-22, J3 = pads 23-44.')
+    mcu.note('Its own 3V3 pins are left open: the board makes +3V3 separately. The N32R16V variant fits and works the same way.')
     mcu.note('GPIO35-37 are used by the octal flash and PSRAM. GPIO47/48 are 1.8 V on the WROOM-2 and stay unused.')
     j1 = {1: None, 2: None, 3: 'ESP_RST', 4: 'CT3', 5: 'CT4', 6: 'CT5', 7: 'CT6', 8: 'SDA', 9: 'SCL',
           10: 'BLEED_STEP', 11: 'BLEED_DIR', 12: 'MAF_FREQ', 13: 'SD_DAT0_MCU', 14: 'HEARTBEAT', 15: 'SWIRL_A',
@@ -126,8 +127,9 @@ def main_board(libdir):
     j3 = {1: 'GND', 2: 'ESP_TX', 3: 'ESP_RX', 4: 'CT1', 5: 'CT2', 6: 'EXP_INT_N', 7: 'SD_CLK_MCU',
           8: 'LIFT_DIR', 9: 'LIFT_STEP', 10: None, 11: None, 12: None, 13: None, 14: None, 15: None, 16: None,
           17: None, 18: 'SD_CMD', 19: None, 20: None, 21: 'GND', 22: 'GND'}
-    b.part('J', 'DevKitC-1_J1', 'ESP32-S3-DevKitC-1 J1', j1)
-    b.part('J', 'DevKitC-1_J3', 'ESP32-S3-DevKitC-1 J3', j3)
+    dk = dict(j1)
+    dk.update({k + 22: v for k, v in j3.items()})
+    b.part('U', 'ESP32-S3-DevKitC-1', 'ESP32-S3-DevKitC-1-N32R8V', dk)
     b.R('10k', 'HEARTBEAT', 'GND')     # GPIO46 strapping: held low at boot
     b.R('10k', 'BLEED_STEP', 'GND')
     b.R('10k', 'LIFT_STEP', 'GND')

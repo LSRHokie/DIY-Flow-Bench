@@ -23,9 +23,9 @@ net,ref,pin,pin_name,sheet
 +24V,TP1,1,1,Power
 +24V_FIELD,F3,2,~,Power
 +24V_FIELD,J10,1,Pin_1,Field inputs
-+24V_FIELD,J11,1,Pin_1,Field inputs
-+24V_FIELD,J12,1,Pin_1,Field inputs
-+24V_FIELD,J23,3,Pin_3,IO and safety
++24V_FIELD,J21,3,Pin_3,IO and safety
++24V_FIELD,J8,1,Pin_1,Field inputs
++24V_FIELD,J9,1,Pin_1,Field inputs
 +24V_RAW,#FLG1,1,pwr,Power
 +24V_RAW,J1,1,Pin_1,Power
 +24V_RAW,J2,1,Pin_1,Power
@@ -48,10 +48,10 @@ net,ref,pin,pin_name,sheet
 +3V3,C7,1,~,Network and storage
 +3V3,C8,1,~,Network and storage
 +3V3,C9,1,~,Network and storage
-+3V3,J15,2,Pin_2,Field inputs
-+3V3,J16,9,Pin_9,IO and safety
-+3V3,J6,4,VDD,Network and storage
-+3V3,J7,1,Pin_1,Sensors and ADC
++3V3,J13,2,Pin_2,Field inputs
++3V3,J14,9,Pin_9,IO and safety
++3V3,J4,4,VDD,Network and storage
++3V3,J5,1,Pin_1,Sensors and ADC
 +3V3,R16,1,~,Network and storage
 +3V3,R17,1,~,Network and storage
 +3V3,R18,1,~,Network and storage
@@ -92,28 +92,27 @@ net,ref,pin,pin_name,sheet
 +3V3,R95,1,~,IO and safety
 +3V3,TP4,1,1,Power
 +3V3,U1,2,VO,Power
-+3V3,U10,8,V+,Field inputs
-+3V3,U11,1,VCC,Field inputs
-+3V3,U12,24,VCC,IO and safety
-+3V3,U13,21,A0,IO and safety
++3V3,U10,14,VCC,Field inputs
++3V3,U11,8,V+,Field inputs
++3V3,U12,1,VCC,Field inputs
 +3V3,U13,24,VCC,IO and safety
-+3V3,U2,8,J2-2 3V3D,Network and storage
-+3V3,U2,9,J2-3 3V3D,Network and storage
-+3V3,U3,24,VCC,Sensors and ADC
-+3V3,U4,1,VDD,Sensors and ADC
++3V3,U14,21,A0,IO and safety
++3V3,U14,24,VCC,IO and safety
++3V3,U3,8,J2-2 3V3D,Network and storage
++3V3,U3,9,J2-3 3V3D,Network and storage
++3V3,U4,24,VCC,Sensors and ADC
 +3V3,U5,1,VDD,Sensors and ADC
 +3V3,U6,1,VDD,Sensors and ADC
-+3V3,U7,13,DVDD,Sensors and ADC
-+3V3,U8,1,A0,Sensors and ADC
++3V3,U7,1,VDD,Sensors and ADC
 +3V3,U8,13,DVDD,Sensors and ADC
-+3V3,U9,14,VCC,Field inputs
++3V3,U9,1,A0,Sensors and ADC
++3V3,U9,13,DVDD,Sensors and ADC
 +5V,C2,1,~,Power
 +5V,C38,1,~,IO and safety
 +5V,C39,1,~,IO and safety
 +5V,C4,1,~,Power
 +5V,C41,1,~,IO and safety
-+5V,J4,21,5V,Controller
-+5V,J9,1,Pin_1,Field inputs
++5V,J7,1,Pin_1,Field inputs
 +5V,PS1,5,VOUT,Power
 +5V,R103,1,~,IO and safety
 +5V,R104,1,~,IO and safety
@@ -123,13 +122,14 @@ net,ref,pin,pin_name,sheet
 +5V,R55,1,~,Field inputs
 +5V,TP3,1,1,Power
 +5V,U1,3,VI,Power
-+5V,U17,16,VCC,IO and safety
-+5V,U17,4,G,IO and safety
 +5V,U18,16,VCC,IO and safety
 +5V,U18,4,G,IO and safety
-+5V,U20,16,VCC,IO and safety
-+5V,U20,3,Clr,IO and safety
-+5V,U20,9,A,IO and safety
++5V,U19,16,VCC,IO and safety
++5V,U19,4,G,IO and safety
++5V,U2,21,J1-21 5V,Controller
++5V,U21,16,VCC,IO and safety
++5V,U21,3,Clr,IO and safety
++5V,U21,9,A,IO and safety
 +5VA,#FLG3,1,pwr,Power
 +5VA,C14,1,~,Sensors and ADC
 +5VA,C16,1,~,Sensors and ADC
@@ -143,146 +143,146 @@ net,ref,pin,pin_name,sheet
 +5VA,R46,1,~,Field inputs
 +5VA,R48,1,~,Field inputs
 +5VA,TP5,1,1,Power
-+5VA,U7,12,AVDD,Sensors and ADC
-+5VA,U7,9,REFP,Sensors and ADC
 +5VA,U8,12,AVDD,Sensors and ADC
 +5VA,U8,9,REFP,Sensors and ADC
++5VA,U9,12,AVDD,Sensors and ADC
++5VA,U9,9,REFP,Sensors and ADC
 ADC2_AIN2,TP17,1,1,Sensors and ADC
-ADC2_AIN2,U8,7,AIN2,Sensors and ADC
+ADC2_AIN2,U9,7,AIN2,Sensors and ADC
 ADC2_AIN3,TP18,1,1,Sensors and ADC
-ADC2_AIN3,U8,6,AIN3,Sensors and ADC
+ADC2_AIN3,U9,6,AIN3,Sensors and ADC
 ADC_RST_N,R37,2,~,Sensors and ADC
-ADC_RST_N,U7,3,~{RESET},Sensors and ADC
 ADC_RST_N,U8,3,~{RESET},Sensors and ADC
+ADC_RST_N,U9,3,~{RESET},Sensors and ADC
 BLEED_24V,F1,1,~,Power
 BLEED_24V,Q1,2,D,Power
 BLEED_24V_F,F1,2,~,Power
-BLEED_24V_F,J18,1,Pin_1,IO and safety
+BLEED_24V_F,J16,1,Pin_1,IO and safety
 BLEED_24V_G,Q1,1,G,Power
 BLEED_24V_G,R1,2,~,Power
 BLEED_24V_G,R2,1,~,Power
 BLEED_24V_K,Q2,3,C,Power
 BLEED_24V_K,R2,2,~,Power
 BLEED_ALM_LED,R103,2,~,IO and safety
-BLEED_ALM_LED,U15,7,~,IO and safety
+BLEED_ALM_LED,U16,7,~,IO and safety
 BLEED_ALM_N,R93,2,~,IO and safety
-BLEED_ALM_N,U13,9,P05,IO and safety
-BLEED_ALM_N,U15,10,~,IO and safety
-BLEED_ALM_P,J17,7,Pin_7,IO and safety
-BLEED_ALM_P,U15,8,~,IO and safety
-BLEED_DIR,J4,11,GPIO18,Controller
-BLEED_DIR,U17,7,2A,IO and safety
-BLEED_DIR_N,J17,4,Pin_4,IO and safety
-BLEED_DIR_N,U17,5,2Z,IO and safety
-BLEED_DIR_P,J17,3,Pin_3,IO and safety
-BLEED_DIR_P,U17,6,2Y,IO and safety
+BLEED_ALM_N,U14,9,P05,IO and safety
+BLEED_ALM_N,U16,10,~,IO and safety
+BLEED_ALM_P,J15,7,Pin_7,IO and safety
+BLEED_ALM_P,U16,8,~,IO and safety
+BLEED_DIR,U18,7,2A,IO and safety
+BLEED_DIR,U2,11,J1-11 GPIO18,Controller
+BLEED_DIR_N,J15,4,Pin_4,IO and safety
+BLEED_DIR_N,U18,5,2Z,IO and safety
+BLEED_DIR_P,J15,3,Pin_3,IO and safety
+BLEED_DIR_P,U18,6,2Y,IO and safety
 BLEED_ENA,R83,1,~,IO and safety
-BLEED_ENA,U12,13,P10,IO and safety
-BLEED_ENA,U17,9,3A,IO and safety
-BLEED_ENA_N,J17,6,Pin_6,IO and safety
-BLEED_ENA_N,U17,11,3Z,IO and safety
-BLEED_ENA_P,J17,5,Pin_5,IO and safety
-BLEED_ENA_P,U17,10,3Y,IO and safety
-BLEED_HOME_IN,J10,2,Pin_2,Field inputs
+BLEED_ENA,U13,13,P10,IO and safety
+BLEED_ENA,U18,9,3A,IO and safety
+BLEED_ENA_N,J15,6,Pin_6,IO and safety
+BLEED_ENA_N,U18,11,3Z,IO and safety
+BLEED_ENA_P,J15,5,Pin_5,IO and safety
+BLEED_ENA_P,U18,10,3Y,IO and safety
+BLEED_HOME_IN,J8,2,Pin_2,Field inputs
 BLEED_HOME_IN,R97,1,~,IO and safety
 BLEED_HOME_IN_LED,R97,2,~,IO and safety
-BLEED_HOME_IN_LED,U14,3,~,IO and safety
+BLEED_HOME_IN_LED,U15,3,~,IO and safety
 BLEED_HOME_N,R86,2,~,IO and safety
-BLEED_HOME_N,U12,16,P13,IO and safety
-BLEED_HOME_N,U14,14,~,IO and safety
-BLEED_PUL_N,J17,2,Pin_2,IO and safety
-BLEED_PUL_N,U17,3,1Z,IO and safety
-BLEED_PUL_P,J17,1,Pin_1,IO and safety
-BLEED_PUL_P,U17,2,1Y,IO and safety
+BLEED_HOME_N,U13,16,P13,IO and safety
+BLEED_HOME_N,U15,14,~,IO and safety
+BLEED_PUL_N,J15,2,Pin_2,IO and safety
+BLEED_PUL_N,U18,3,1Z,IO and safety
+BLEED_PUL_P,J15,1,Pin_1,IO and safety
+BLEED_PUL_P,U18,2,1Y,IO and safety
 BLEED_PWR_EN,R3,1,~,Power
 BLEED_PWR_EN,R81,1,~,IO and safety
-BLEED_PWR_EN,U12,11,P07,IO and safety
+BLEED_PWR_EN,U13,11,P07,IO and safety
 BLEED_PWR_EN_B,Q2,1,B,Power
 BLEED_PWR_EN_B,R3,2,~,Power
 BLEED_PWR_EN_B,R4,1,~,Power
-BLEED_STEP,J4,10,GPIO17,Controller
 BLEED_STEP,R14,1,~,Controller
-BLEED_STEP,U17,1,1A,IO and safety
+BLEED_STEP,U18,1,1A,IO and safety
+BLEED_STEP,U2,10,J1-10 GPIO17,Controller
 COIL1_CMD,R74,1,~,IO and safety
-COIL1_CMD,U12,4,P00,IO and safety
-COIL1_CMD,U19,1,I1,IO and safety
-COIL1_RET,J21,2,Pin_2,IO and safety
-COIL1_RET,U19,18,O1,IO and safety
+COIL1_CMD,U13,4,P00,IO and safety
+COIL1_CMD,U20,1,I1,IO and safety
+COIL1_RET,J19,2,Pin_2,IO and safety
+COIL1_RET,U20,18,O1,IO and safety
 COIL2_CMD,R75,1,~,IO and safety
-COIL2_CMD,U12,5,P01,IO and safety
-COIL2_CMD,U19,2,I2,IO and safety
-COIL2_RET,J21,3,Pin_3,IO and safety
-COIL2_RET,U19,17,O2,IO and safety
+COIL2_CMD,U13,5,P01,IO and safety
+COIL2_CMD,U20,2,I2,IO and safety
+COIL2_RET,J19,3,Pin_3,IO and safety
+COIL2_RET,U20,17,O2,IO and safety
 COIL3_CMD,R76,1,~,IO and safety
-COIL3_CMD,U12,6,P02,IO and safety
-COIL3_CMD,U19,3,I3,IO and safety
-COIL3_RET,J21,4,Pin_4,IO and safety
-COIL3_RET,U19,16,O3,IO and safety
+COIL3_CMD,U13,6,P02,IO and safety
+COIL3_CMD,U20,3,I3,IO and safety
+COIL3_RET,J19,4,Pin_4,IO and safety
+COIL3_RET,U20,16,O3,IO and safety
 COIL4_CMD,R77,1,~,IO and safety
-COIL4_CMD,U12,7,P03,IO and safety
-COIL4_CMD,U19,4,I4,IO and safety
-COIL4_RET,J21,5,Pin_5,IO and safety
-COIL4_RET,U19,15,O4,IO and safety
+COIL4_CMD,U13,7,P03,IO and safety
+COIL4_CMD,U20,4,I4,IO and safety
+COIL4_RET,J19,5,Pin_5,IO and safety
+COIL4_RET,U20,15,O4,IO and safety
 COIL5_CMD,R78,1,~,IO and safety
-COIL5_CMD,U12,8,P04,IO and safety
-COIL5_CMD,U19,5,I5,IO and safety
-COIL5_RET,J21,6,Pin_6,IO and safety
-COIL5_RET,U19,14,O5,IO and safety
+COIL5_CMD,U13,8,P04,IO and safety
+COIL5_CMD,U20,5,I5,IO and safety
+COIL5_RET,J19,6,Pin_6,IO and safety
+COIL5_RET,U20,14,O5,IO and safety
 COIL6_CMD,R79,1,~,IO and safety
-COIL6_CMD,U12,9,P05,IO and safety
-COIL6_CMD,U19,6,I6,IO and safety
-COIL6_RET,J21,7,Pin_7,IO and safety
-COIL6_RET,U19,13,O6,IO and safety
-COIL_24V,J23,1,Pin_1,IO and safety
+COIL6_CMD,U13,9,P05,IO and safety
+COIL6_CMD,U20,6,I6,IO and safety
+COIL6_RET,J19,7,Pin_7,IO and safety
+COIL6_RET,U20,13,O6,IO and safety
+COIL_24V,J21,1,Pin_1,IO and safety
 COIL_24V,Q5,2,D,Power
-COIL_24V_ESTOP,J21,1,Pin_1,IO and safety
-COIL_24V_ESTOP,J22,1,Pin_1,IO and safety
-COIL_24V_ESTOP,J23,2,Pin_2,IO and safety
-COIL_24V_ESTOP,U19,10,COM,IO and safety
+COIL_24V_ESTOP,J19,1,Pin_1,IO and safety
+COIL_24V_ESTOP,J20,1,Pin_1,IO and safety
+COIL_24V_ESTOP,J21,2,Pin_2,IO and safety
+COIL_24V_ESTOP,U20,10,COM,IO and safety
 COIL_24V_G,Q5,1,G,Power
 COIL_24V_G,R10,1,~,Power
 COIL_24V_G,R9,2,~,Power
 COIL_24V_K,Q6,3,C,Power
 COIL_24V_K,R10,2,~,Power
 CT1,C29,1,~,Field inputs
-CT1,J5,4,GPIO1,Controller
 CT1,R59,2,~,Field inputs
-CT1_IN,J13,1,Pin_1,Field inputs
+CT1,U2,26,J3-4 GPIO1,Controller
+CT1_IN,J11,1,Pin_1,Field inputs
 CT1_IN,R59,1,~,Field inputs
 CT2,C30,1,~,Field inputs
-CT2,J5,5,GPIO2,Controller
 CT2,R60,2,~,Field inputs
-CT2_IN,J13,2,Pin_2,Field inputs
+CT2,U2,27,J3-5 GPIO2,Controller
+CT2_IN,J11,2,Pin_2,Field inputs
 CT2_IN,R60,1,~,Field inputs
 CT3,C31,1,~,Field inputs
-CT3,J4,4,GPIO4,Controller
 CT3,R61,2,~,Field inputs
-CT3_IN,J13,3,Pin_3,Field inputs
+CT3,U2,4,J1-4 GPIO4,Controller
+CT3_IN,J11,3,Pin_3,Field inputs
 CT3_IN,R61,1,~,Field inputs
 CT4,C32,1,~,Field inputs
-CT4,J4,5,GPIO5,Controller
 CT4,R62,2,~,Field inputs
-CT4_IN,J13,4,Pin_4,Field inputs
+CT4,U2,5,J1-5 GPIO5,Controller
+CT4_IN,J11,4,Pin_4,Field inputs
 CT4_IN,R62,1,~,Field inputs
 CT5,C33,1,~,Field inputs
-CT5,J4,6,GPIO6,Controller
 CT5,R63,2,~,Field inputs
-CT5_IN,J13,5,Pin_5,Field inputs
+CT5,U2,6,J1-6 GPIO6,Controller
+CT5_IN,J11,5,Pin_5,Field inputs
 CT5_IN,R63,1,~,Field inputs
 CT6,C34,1,~,Field inputs
-CT6,J4,7,GPIO7,Controller
 CT6,R64,2,~,Field inputs
-CT6_IN,J13,6,Pin_6,Field inputs
+CT6,U2,7,J1-7 GPIO7,Controller
+CT6_IN,J11,6,Pin_6,Field inputs
 CT6_IN,R64,1,~,Field inputs
 CT_BIAS,C27,1,~,Field inputs
-CT_BIAS,J13,7,Pin_7,Field inputs
-CT_BIAS,U10,1,~,Field inputs
-CT_BIAS,U10,2,-,Field inputs
+CT_BIAS,J11,7,Pin_7,Field inputs
+CT_BIAS,U11,1,~,Field inputs
+CT_BIAS,U11,2,-,Field inputs
 CT_BIAS_DIV,C26,1,~,Field inputs
 CT_BIAS_DIV,R57,2,~,Field inputs
 CT_BIAS_DIV,R58,1,~,Field inputs
-CT_BIAS_DIV,U10,3,+,Field inputs
-DIGI_CLK,J14,3,Pin_3,Field inputs
+CT_BIAS_DIV,U11,3,+,Field inputs
+DIGI_CLK,J12,3,Pin_3,Field inputs
 DIGI_CLK,JP4,1,A,Field inputs
 DIGI_CLK,R65,2,~,Field inputs
 DIGI_CLK,R66,1,~,Field inputs
@@ -291,10 +291,10 @@ DIGI_CLK_INV,JP4,3,B,Field inputs
 DIGI_CLK_INV,Q7,3,C,Field inputs
 DIGI_CLK_INV,R67,2,~,Field inputs
 DIGI_CLK_MCU,JP4,2,C,Field inputs
-DIGI_CLK_MCU,U11,2,PA4,Field inputs
+DIGI_CLK_MCU,U12,2,PA4,Field inputs
 DIGI_CLK_QB,Q7,1,B,Field inputs
 DIGI_CLK_QB,R66,2,~,Field inputs
-DIGI_DATA,J14,2,Pin_2,Field inputs
+DIGI_DATA,J12,2,Pin_2,Field inputs
 DIGI_DATA,JP5,1,A,Field inputs
 DIGI_DATA,R68,2,~,Field inputs
 DIGI_DATA,R69,1,~,Field inputs
@@ -303,70 +303,70 @@ DIGI_DATA_INV,JP5,3,B,Field inputs
 DIGI_DATA_INV,Q8,3,C,Field inputs
 DIGI_DATA_INV,R70,2,~,Field inputs
 DIGI_DATA_MCU,JP5,2,C,Field inputs
-DIGI_DATA_MCU,U11,3,PA5,Field inputs
+DIGI_DATA_MCU,U12,3,PA5,Field inputs
 DIGI_DATA_QB,Q8,1,B,Field inputs
 DIGI_DATA_QB,R69,2,~,Field inputs
-DIGI_REQ,J14,4,Pin_4,Field inputs
+DIGI_REQ,J12,4,Pin_4,Field inputs
 DIGI_REQ,Q9,3,C,Field inputs
 DIGI_REQ,TP21,1,1,Field inputs
 DIGI_REQ_B,Q9,1,B,Field inputs
 DIGI_REQ_B,R71,2,~,Field inputs
 DIGI_REQ_B,R72,1,~,Field inputs
 DIGI_REQ_DRV,R71,1,~,Field inputs
-DIGI_REQ_DRV,U11,4,PA6,Field inputs
-DIGI_UPDI,J15,1,Pin_1,Field inputs
-DIGI_UPDI,U11,16,~{RESET}/PA0,Field inputs
+DIGI_REQ_DRV,U12,4,PA6,Field inputs
+DIGI_UPDI,J13,1,Pin_1,Field inputs
+DIGI_UPDI,U12,16,~{RESET}/PA0,Field inputs
 EFUSE_FLT_N,J3,4,Pin_4,Power
 EFUSE_FLT_N,R94,2,~,IO and safety
-EFUSE_FLT_N,U13,11,P07,IO and safety
+EFUSE_FLT_N,U14,11,P07,IO and safety
 EFUSE_IMON,C21,1,~,Sensors and ADC
 EFUSE_IMON,J3,5,Pin_5,Power
-EFUSE_IMON,U8,11,AIN0,Sensors and ADC
-ESP_RST,J4,3,RST,Controller
+EFUSE_IMON,U9,11,AIN0,Sensors and ADC
 ESP_RST,TP7,1,1,Controller
-ESP_RX,J5,3,RX/GPIO44,Controller
+ESP_RST,U2,3,J1-3 RST,Controller
 ESP_RX,TP9,1,1,Controller
-ESP_TX,J5,2,TX/GPIO43,Controller
+ESP_RX,U2,25,J3-3 RX/GPIO44,Controller
 ESP_TX,TP8,1,1,Controller
+ESP_TX,U2,24,J3-2 TX/GPIO43,Controller
 ESTOP_OK_N,R85,2,~,IO and safety
-ESTOP_OK_N,U12,15,P12,IO and safety
-ESTOP_OK_N,U14,16,~,IO and safety
-ESTOP_STAT_IN,J23,4,Pin_4,IO and safety
+ESTOP_OK_N,U13,15,P12,IO and safety
+ESTOP_OK_N,U15,16,~,IO and safety
+ESTOP_STAT_IN,J21,4,Pin_4,IO and safety
 ESTOP_STAT_IN,R96,1,~,IO and safety
 ESTOP_STAT_IN_LED,R96,2,~,IO and safety
-ESTOP_STAT_IN_LED,U14,1,~,IO and safety
-ETH_CS,J4,20,GPIO14,Controller
+ESTOP_STAT_IN_LED,U15,1,~,IO and safety
 ETH_CS,R16,2,~,Network and storage
-ETH_CS,U2,5,J1-5 SCNn,Network and storage
+ETH_CS,U2,20,J1-20 GPIO14,Controller
+ETH_CS,U3,5,J1-5 SCNn,Network and storage
 ETH_INT_EXP,JP1,2,B,Network and storage
 ETH_INT_EXP,R95,2,~,IO and safety
-ETH_INT_EXP,U13,10,P06,IO and safety
+ETH_INT_EXP,U14,10,P06,IO and safety
 ETH_INT_N,JP1,1,A,Network and storage
 ETH_INT_N,R17,2,~,Network and storage
-ETH_INT_N,U2,6,J1-6 INTn,Network and storage
+ETH_INT_N,U3,6,J1-6 INTn,Network and storage
 ETH_RST_N,R18,2,~,Network and storage
-ETH_RST_N,U12,14,P11,IO and safety
-ETH_RST_N,U2,11,J2-5 RSTn,Network and storage
-EXP2_P10,J16,1,Pin_1,IO and safety
-EXP2_P10,U13,13,P10,IO and safety
-EXP2_P11,J16,2,Pin_2,IO and safety
-EXP2_P11,U13,14,P11,IO and safety
-EXP2_P12,J16,3,Pin_3,IO and safety
-EXP2_P12,U13,15,P12,IO and safety
-EXP2_P13,J16,4,Pin_4,IO and safety
-EXP2_P13,U13,16,P13,IO and safety
-EXP2_P14,J16,5,Pin_5,IO and safety
-EXP2_P14,U13,17,P14,IO and safety
-EXP2_P15,J16,6,Pin_6,IO and safety
-EXP2_P15,U13,18,P15,IO and safety
-EXP2_P16,J16,7,Pin_7,IO and safety
-EXP2_P16,U13,19,P16,IO and safety
-EXP2_P17,J16,8,Pin_8,IO and safety
-EXP2_P17,U13,20,P17,IO and safety
-EXP_INT_N,J5,6,GPIO42,Controller
+ETH_RST_N,U13,14,P11,IO and safety
+ETH_RST_N,U3,11,J2-5 RSTn,Network and storage
+EXP2_P10,J14,1,Pin_1,IO and safety
+EXP2_P10,U14,13,P10,IO and safety
+EXP2_P11,J14,2,Pin_2,IO and safety
+EXP2_P11,U14,14,P11,IO and safety
+EXP2_P12,J14,3,Pin_3,IO and safety
+EXP2_P12,U14,15,P12,IO and safety
+EXP2_P13,J14,4,Pin_4,IO and safety
+EXP2_P13,U14,16,P13,IO and safety
+EXP2_P14,J14,5,Pin_5,IO and safety
+EXP2_P14,U14,17,P14,IO and safety
+EXP2_P15,J14,6,Pin_6,IO and safety
+EXP2_P15,U14,18,P15,IO and safety
+EXP2_P16,J14,7,Pin_7,IO and safety
+EXP2_P16,U14,19,P16,IO and safety
+EXP2_P17,J14,8,Pin_8,IO and safety
+EXP2_P17,U14,20,P17,IO and safety
 EXP_INT_N,R73,2,~,IO and safety
-EXP_INT_N,U12,1,~{INT},IO and safety
 EXP_INT_N,U13,1,~{INT},IO and safety
+EXP_INT_N,U14,1,~{INT},IO and safety
+EXP_INT_N,U2,28,J3-6 GPIO42,Controller
 GND,#FLG4,1,pwr,Power
 GND,C1,2,~,Power
 GND,C10,2,~,Sensors and ADC
@@ -412,33 +412,29 @@ GND,D1,1,K,Field inputs
 GND,D2,1,K,Field inputs
 GND,D3,1,K,Field inputs
 GND,J1,2,Pin_2,Power
-GND,J10,3,Pin_3,Field inputs
-GND,J11,4,Pin_4,Field inputs
-GND,J12,5,Pin_5,Field inputs
-GND,J13,8,Pin_8,Field inputs
-GND,J14,1,Pin_1,Field inputs
-GND,J15,3,Pin_3,Field inputs
-GND,J16,10,Pin_10,IO and safety
+GND,J10,5,Pin_5,Field inputs
+GND,J11,8,Pin_8,Field inputs
+GND,J12,1,Pin_1,Field inputs
+GND,J13,3,Pin_3,Field inputs
+GND,J14,10,Pin_10,IO and safety
+GND,J15,8,Pin_8,IO and safety
+GND,J16,2,Pin_2,IO and safety
 GND,J17,8,Pin_8,IO and safety
 GND,J18,2,Pin_2,IO and safety
-GND,J19,8,Pin_8,IO and safety
 GND,J2,5,Pin_5,Power
 GND,J2,6,Pin_6,Power
 GND,J2,7,Pin_7,Power
 GND,J2,8,Pin_8,Power
-GND,J20,2,Pin_2,IO and safety
 GND,J3,3,Pin_3,Power
 GND,J3,6,Pin_6,Power
-GND,J4,22,GND,Controller
-GND,J5,1,GND,Controller
-GND,J5,21,GND,Controller
-GND,J5,22,GND,Controller
-GND,J6,11,SHIELD,Network and storage
-GND,J6,6,VSS,Network and storage
-GND,J6,9,DET_B,Network and storage
-GND,J7,2,Pin_2,Sensors and ADC
-GND,J8,2,Pin_2,Field inputs
-GND,J9,2,Pin_2,Field inputs
+GND,J4,11,SHIELD,Network and storage
+GND,J4,6,VSS,Network and storage
+GND,J4,9,DET_B,Network and storage
+GND,J5,2,Pin_2,Sensors and ADC
+GND,J6,2,Pin_2,Field inputs
+GND,J7,2,Pin_2,Field inputs
+GND,J8,3,Pin_3,Field inputs
+GND,J9,4,Pin_4,Field inputs
 GND,PS1,4,GND,Power
 GND,PS1,6,GND,Power
 GND,PS2,4,GND,Power
@@ -474,297 +470,301 @@ GND,R83,2,~,IO and safety
 GND,R84,2,~,IO and safety
 GND,TP6,1,1,Power
 GND,U1,1,GND,Power
-GND,U10,4,V-,Field inputs
-GND,U10,5,+,Field inputs
-GND,U11,20,GND,Field inputs
-GND,U12,12,GND,IO and safety
-GND,U12,2,A1,IO and safety
-GND,U12,21,A0,IO and safety
-GND,U12,3,A2,IO and safety
+GND,U10,11,~,Field inputs
+GND,U10,13,~,Field inputs
+GND,U10,7,GND,Field inputs
+GND,U10,9,~,Field inputs
+GND,U11,4,V-,Field inputs
+GND,U11,5,+,Field inputs
+GND,U12,20,GND,Field inputs
 GND,U13,12,GND,IO and safety
 GND,U13,2,A1,IO and safety
+GND,U13,21,A0,IO and safety
 GND,U13,3,A2,IO and safety
-GND,U14,11,~,IO and safety
-GND,U14,13,~,IO and safety
-GND,U14,15,~,IO and safety
-GND,U14,2,~,IO and safety
-GND,U14,4,~,IO and safety
-GND,U14,6,~,IO and safety
-GND,U14,8,~,IO and safety
-GND,U14,9,~,IO and safety
+GND,U14,12,GND,IO and safety
+GND,U14,2,A1,IO and safety
+GND,U14,3,A2,IO and safety
 GND,U15,11,~,IO and safety
 GND,U15,13,~,IO and safety
 GND,U15,15,~,IO and safety
 GND,U15,2,~,IO and safety
 GND,U15,4,~,IO and safety
 GND,U15,6,~,IO and safety
+GND,U15,8,~,IO and safety
 GND,U15,9,~,IO and safety
+GND,U16,11,~,IO and safety
+GND,U16,13,~,IO and safety
 GND,U16,15,~,IO and safety
-GND,U17,12,~{G},IO and safety
-GND,U17,15,4A,IO and safety
-GND,U17,8,GND,IO and safety
+GND,U16,2,~,IO and safety
+GND,U16,4,~,IO and safety
+GND,U16,6,~,IO and safety
+GND,U16,9,~,IO and safety
+GND,U17,15,~,IO and safety
 GND,U18,12,~{G},IO and safety
 GND,U18,15,4A,IO and safety
 GND,U18,8,GND,IO and safety
-GND,U19,8,I8,IO and safety
-GND,U19,9,GND,IO and safety
-GND,U2,1,J1-1 GND,Network and storage
-GND,U2,2,J1-2 GND,Network and storage
-GND,U2,7,J2-1 GND,Network and storage
-GND,U20,1,A,IO and safety
-GND,U20,10,B,IO and safety
-GND,U20,11,Clr,IO and safety
-GND,U20,8,GND,IO and safety
-GND,U3,1,A0,Sensors and ADC
-GND,U3,12,GND,Sensors and ADC
-GND,U3,2,A1,Sensors and ADC
-GND,U3,21,A2,Sensors and ADC
-GND,U4,5,GND,Sensors and ADC
+GND,U19,12,~{G},IO and safety
+GND,U19,15,4A,IO and safety
+GND,U19,8,GND,IO and safety
+GND,U2,22,J1-22 GND,Controller
+GND,U2,23,J3-1 GND,Controller
+GND,U2,43,J3-21 GND,Controller
+GND,U2,44,J3-22 GND,Controller
+GND,U20,8,I8,IO and safety
+GND,U20,9,GND,IO and safety
+GND,U21,1,A,IO and safety
+GND,U21,10,B,IO and safety
+GND,U21,11,Clr,IO and safety
+GND,U21,8,GND,IO and safety
+GND,U3,1,J1-1 GND,Network and storage
+GND,U3,2,J1-2 GND,Network and storage
+GND,U3,7,J2-1 GND,Network and storage
+GND,U4,1,A0,Sensors and ADC
+GND,U4,12,GND,Sensors and ADC
+GND,U4,2,A1,Sensors and ADC
+GND,U4,21,A2,Sensors and ADC
 GND,U5,5,GND,Sensors and ADC
 GND,U6,5,GND,Sensors and ADC
-GND,U7,1,A0,Sensors and ADC
-GND,U7,2,A1,Sensors and ADC
-GND,U7,4,DGND,Sensors and ADC
-GND,U7,5,AGND,Sensors and ADC
-GND,U7,8,REFN,Sensors and ADC
+GND,U7,5,GND,Sensors and ADC
+GND,U8,1,A0,Sensors and ADC
 GND,U8,2,A1,Sensors and ADC
 GND,U8,4,DGND,Sensors and ADC
 GND,U8,5,AGND,Sensors and ADC
 GND,U8,8,REFN,Sensors and ADC
-GND,U9,11,~,Field inputs
-GND,U9,13,~,Field inputs
-GND,U9,7,GND,Field inputs
-GND,U9,9,~,Field inputs
-HEARTBEAT,J4,14,GPIO46,Controller
+GND,U9,2,A1,Sensors and ADC
+GND,U9,4,DGND,Sensors and ADC
+GND,U9,5,AGND,Sensors and ADC
+GND,U9,8,REFN,Sensors and ADC
 HEARTBEAT,R13,1,~,Controller
 HEARTBEAT,TP12,1,1,Controller
-HEARTBEAT,U20,2,B,IO and safety
+HEARTBEAT,U2,14,J1-14 GPIO46,Controller
+HEARTBEAT,U21,2,B,IO and safety
 LAMP_CMD,R80,1,~,IO and safety
-LAMP_CMD,U12,10,P06,IO and safety
-LAMP_CMD,U19,7,I7,IO and safety
-LAMP_RET,J22,2,Pin_2,IO and safety
-LAMP_RET,U19,12,O7,IO and safety
+LAMP_CMD,U13,10,P06,IO and safety
+LAMP_CMD,U20,7,I7,IO and safety
+LAMP_RET,J20,2,Pin_2,IO and safety
+LAMP_RET,U20,12,O7,IO and safety
 LIFT_24V,F2,1,~,Power
 LIFT_24V,Q3,2,D,Power
 LIFT_24V_F,F2,2,~,Power
-LIFT_24V_F,J20,1,Pin_1,IO and safety
+LIFT_24V_F,J18,1,Pin_1,IO and safety
 LIFT_24V_G,Q3,1,G,Power
 LIFT_24V_G,R5,2,~,Power
 LIFT_24V_G,R6,1,~,Power
 LIFT_24V_K,Q4,3,C,Power
 LIFT_24V_K,R6,2,~,Power
 LIFT_ALM_LED,R104,2,~,IO and safety
-LIFT_ALM_LED,U16,1,~,IO and safety
+LIFT_ALM_LED,U17,1,~,IO and safety
 LIFT_ALM_N,R90,2,~,IO and safety
-LIFT_ALM_N,U13,6,P02,IO and safety
-LIFT_ALM_N,U16,16,~,IO and safety
-LIFT_ALM_P,J19,7,Pin_7,IO and safety
-LIFT_ALM_P,U16,2,~,IO and safety
-LIFT_DIR,J5,8,GPIO40,Controller
-LIFT_DIR,U18,7,2A,IO and safety
-LIFT_DIR_N,J19,4,Pin_4,IO and safety
-LIFT_DIR_N,U18,5,2Z,IO and safety
-LIFT_DIR_P,J19,3,Pin_3,IO and safety
-LIFT_DIR_P,U18,6,2Y,IO and safety
+LIFT_ALM_N,U14,6,P02,IO and safety
+LIFT_ALM_N,U17,16,~,IO and safety
+LIFT_ALM_P,J17,7,Pin_7,IO and safety
+LIFT_ALM_P,U17,2,~,IO and safety
+LIFT_DIR,U19,7,2A,IO and safety
+LIFT_DIR,U2,30,J3-8 GPIO40,Controller
+LIFT_DIR_N,J17,4,Pin_4,IO and safety
+LIFT_DIR_N,U19,5,2Z,IO and safety
+LIFT_DIR_P,J17,3,Pin_3,IO and safety
+LIFT_DIR_P,U19,6,2Y,IO and safety
 LIFT_ENA,R84,1,~,IO and safety
-LIFT_ENA,U13,5,P01,IO and safety
-LIFT_ENA,U18,9,3A,IO and safety
-LIFT_ENA_N,J19,6,Pin_6,IO and safety
-LIFT_ENA_N,U18,11,3Z,IO and safety
-LIFT_ENA_P,J19,5,Pin_5,IO and safety
-LIFT_ENA_P,U18,10,3Y,IO and safety
-LIFT_HOME_IN,J11,2,Pin_2,Field inputs
+LIFT_ENA,U14,5,P01,IO and safety
+LIFT_ENA,U19,9,3A,IO and safety
+LIFT_ENA_N,J17,6,Pin_6,IO and safety
+LIFT_ENA_N,U19,11,3Z,IO and safety
+LIFT_ENA_P,J17,5,Pin_5,IO and safety
+LIFT_ENA_P,U19,10,3Y,IO and safety
+LIFT_HOME_IN,J9,2,Pin_2,Field inputs
 LIFT_HOME_IN,R98,1,~,IO and safety
 LIFT_HOME_IN_LED,R98,2,~,IO and safety
-LIFT_HOME_IN_LED,U14,5,~,IO and safety
+LIFT_HOME_IN_LED,U15,5,~,IO and safety
 LIFT_HOME_N,R91,2,~,IO and safety
-LIFT_HOME_N,U13,7,P03,IO and safety
-LIFT_HOME_N,U14,12,~,IO and safety
-LIFT_MAX_IN,J11,3,Pin_3,Field inputs
+LIFT_HOME_N,U14,7,P03,IO and safety
+LIFT_HOME_N,U15,12,~,IO and safety
+LIFT_MAX_IN,J9,3,Pin_3,Field inputs
 LIFT_MAX_IN,R99,1,~,IO and safety
 LIFT_MAX_IN_LED,R99,2,~,IO and safety
-LIFT_MAX_IN_LED,U14,7,~,IO and safety
+LIFT_MAX_IN_LED,U15,7,~,IO and safety
 LIFT_MAX_N,R92,2,~,IO and safety
-LIFT_MAX_N,U13,8,P04,IO and safety
-LIFT_MAX_N,U14,10,~,IO and safety
-LIFT_PUL_N,J19,2,Pin_2,IO and safety
-LIFT_PUL_N,U18,3,1Z,IO and safety
-LIFT_PUL_P,J19,1,Pin_1,IO and safety
-LIFT_PUL_P,U18,2,1Y,IO and safety
+LIFT_MAX_N,U14,8,P04,IO and safety
+LIFT_MAX_N,U15,10,~,IO and safety
+LIFT_PUL_N,J17,2,Pin_2,IO and safety
+LIFT_PUL_N,U19,3,1Z,IO and safety
+LIFT_PUL_P,J17,1,Pin_1,IO and safety
+LIFT_PUL_P,U19,2,1Y,IO and safety
 LIFT_PWR_EN,R7,1,~,Power
 LIFT_PWR_EN,R82,1,~,IO and safety
-LIFT_PWR_EN,U13,4,P00,IO and safety
+LIFT_PWR_EN,U14,4,P00,IO and safety
 LIFT_PWR_EN_B,Q4,1,B,Power
 LIFT_PWR_EN_B,R7,2,~,Power
 LIFT_PWR_EN_B,R8,1,~,Power
-LIFT_STEP,J5,9,GPIO39,Controller
 LIFT_STEP,R15,1,~,Controller
-LIFT_STEP,U18,1,1A,IO and safety
+LIFT_STEP,U19,1,1A,IO and safety
+LIFT_STEP,U2,31,J3-9 GPIO39,Controller
 MAF_12V,F4,2,~,Field inputs
-MAF_12V,J8,1,Pin_1,Field inputs
-MAF_5VREF,J8,6,Pin_6,Field inputs
+MAF_12V,J6,1,Pin_1,Field inputs
+MAF_5VREF,J6,6,Pin_6,Field inputs
 MAF_5VREF,R42,2,~,Field inputs
-MAF_FREQ,J4,12,GPIO8,Controller
-MAF_FREQ,U9,2,~,Field inputs
-MAF_FREQ_IN,J8,4,Pin_4,Field inputs
+MAF_FREQ,U10,2,~,Field inputs
+MAF_FREQ,U2,12,J1-12 GPIO8,Controller
+MAF_FREQ_IN,J6,4,Pin_4,Field inputs
 MAF_FREQ_IN,JP3,1,A,Field inputs
 MAF_FREQ_IN,R51,1,~,Field inputs
 MAF_FREQ_P,R51,2,~,Field inputs
 MAF_FREQ_P,R52,1,~,Field inputs
-MAF_FREQ_P,U9,1,~,Field inputs
+MAF_FREQ_P,U10,1,~,Field inputs
 MAF_FREQ_PU,JP3,2,B,Field inputs
 MAF_FREQ_PU,R50,1,~,Field inputs
-MAF_IAT,J8,5,Pin_5,Field inputs
+MAF_IAT,J6,5,Pin_5,Field inputs
 MAF_IAT,R46,2,~,Field inputs
 MAF_IAT,R47,1,~,Field inputs
 MAF_IAT_ADC,C23,1,~,Field inputs
 MAF_IAT_ADC,D2,3,K,Field inputs
 MAF_IAT_ADC,R47,2,~,Field inputs
-MAF_IAT_ADC,U7,10,AIN1,Sensors and ADC
-MAF_ID,J8,7,Pin_7,Field inputs
+MAF_IAT_ADC,U8,10,AIN1,Sensors and ADC
+MAF_ID,J6,7,Pin_7,Field inputs
 MAF_ID,R48,2,~,Field inputs
 MAF_ID,R49,1,~,Field inputs
 MAF_ID_ADC,C24,1,~,Field inputs
 MAF_ID_ADC,D3,3,K,Field inputs
 MAF_ID_ADC,R49,2,~,Field inputs
-MAF_ID_ADC,U8,10,AIN1,Sensors and ADC
-MAF_SIG,J8,3,Pin_3,Field inputs
+MAF_ID_ADC,U9,10,AIN1,Sensors and ADC
+MAF_SIG,J6,3,Pin_3,Field inputs
 MAF_SIG,R43,1,~,Field inputs
 MAF_SIG_ADC,C22,1,~,Field inputs
 MAF_SIG_ADC,R44,2,~,Field inputs
 MAF_SIG_ADC,R45,1,~,Field inputs
-MAF_SIG_ADC,U7,11,AIN0,Sensors and ADC
+MAF_SIG_ADC,U8,11,AIN0,Sensors and ADC
 MAF_SIG_P,D1,3,K,Field inputs
 MAF_SIG_P,R43,2,~,Field inputs
 MAF_SIG_P,R44,1,~,Field inputs
 MON_24V,C19,1,~,Sensors and ADC
 MON_24V,R38,2,~,Sensors and ADC
 MON_24V,R39,1,~,Sensors and ADC
-MON_24V,U7,6,AIN3,Sensors and ADC
+MON_24V,U8,6,AIN3,Sensors and ADC
 MON_5VA,C20,1,~,Sensors and ADC
 MON_5VA,R40,2,~,Sensors and ADC
 MON_5VA,R41,1,~,Sensors and ADC
-MON_5VA,U7,7,AIN2,Sensors and ADC
+MON_5VA,U8,7,AIN2,Sensors and ADC
 MUX0_SCL,R30,2,~,Sensors and ADC
-MUX0_SCL,U3,5,SC0,Sensors and ADC
-MUX0_SCL,U4,2,SCL,Sensors and ADC
+MUX0_SCL,U4,5,SC0,Sensors and ADC
+MUX0_SCL,U5,2,SCL,Sensors and ADC
 MUX0_SDA,R29,2,~,Sensors and ADC
-MUX0_SDA,U3,4,SD0,Sensors and ADC
-MUX0_SDA,U4,4,SDA,Sensors and ADC
+MUX0_SDA,U4,4,SD0,Sensors and ADC
+MUX0_SDA,U5,4,SDA,Sensors and ADC
 MUX1_SCL,R32,2,~,Sensors and ADC
-MUX1_SCL,U3,7,SC1,Sensors and ADC
-MUX1_SCL,U5,2,SCL,Sensors and ADC
+MUX1_SCL,U4,7,SC1,Sensors and ADC
+MUX1_SCL,U6,2,SCL,Sensors and ADC
 MUX1_SDA,R31,2,~,Sensors and ADC
-MUX1_SDA,U3,6,SD1,Sensors and ADC
-MUX1_SDA,U5,4,SDA,Sensors and ADC
+MUX1_SDA,U4,6,SD1,Sensors and ADC
+MUX1_SDA,U6,4,SDA,Sensors and ADC
 MUX2_SCL,R34,2,~,Sensors and ADC
-MUX2_SCL,U3,9,SC2,Sensors and ADC
-MUX2_SCL,U6,2,SCL,Sensors and ADC
+MUX2_SCL,U4,9,SC2,Sensors and ADC
+MUX2_SCL,U7,2,SCL,Sensors and ADC
 MUX2_SDA,R33,2,~,Sensors and ADC
-MUX2_SDA,U3,8,SD2,Sensors and ADC
-MUX2_SDA,U6,4,SDA,Sensors and ADC
-MUX3_SCL,J7,4,Pin_4,Sensors and ADC
+MUX2_SDA,U4,8,SD2,Sensors and ADC
+MUX2_SDA,U7,4,SDA,Sensors and ADC
+MUX3_SCL,J5,4,Pin_4,Sensors and ADC
 MUX3_SCL,R36,2,~,Sensors and ADC
-MUX3_SCL,U3,11,SC3,Sensors and ADC
-MUX3_SDA,J7,3,Pin_3,Sensors and ADC
+MUX3_SCL,U4,11,SC3,Sensors and ADC
+MUX3_SDA,J5,3,Pin_3,Sensors and ADC
 MUX3_SDA,R35,2,~,Sensors and ADC
-MUX3_SDA,U3,10,SD3,Sensors and ADC
+MUX3_SDA,U4,10,SD3,Sensors and ADC
 MUX_RST_N,R28,2,~,Sensors and ADC
-MUX_RST_N,U3,3,~{RESET},Sensors and ADC
-OPB_FB,U10,6,-,Field inputs
-OPB_FB,U10,7,~,Field inputs
-ORIF_B0_IN,J12,2,Pin_2,Field inputs
+MUX_RST_N,U4,3,~{RESET},Sensors and ADC
+OPB_FB,U11,6,-,Field inputs
+OPB_FB,U11,7,~,Field inputs
+ORIF_B0_IN,J10,2,Pin_2,Field inputs
 ORIF_B0_IN,R100,1,~,IO and safety
 ORIF_B0_IN_LED,R100,2,~,IO and safety
-ORIF_B0_IN_LED,U15,1,~,IO and safety
+ORIF_B0_IN_LED,U16,1,~,IO and safety
 ORIF_B0_N,R87,2,~,IO and safety
-ORIF_B0_N,U12,17,P14,IO and safety
-ORIF_B0_N,U15,16,~,IO and safety
-ORIF_B1_IN,J12,3,Pin_3,Field inputs
+ORIF_B0_N,U13,17,P14,IO and safety
+ORIF_B0_N,U16,16,~,IO and safety
+ORIF_B1_IN,J10,3,Pin_3,Field inputs
 ORIF_B1_IN,R101,1,~,IO and safety
 ORIF_B1_IN_LED,R101,2,~,IO and safety
-ORIF_B1_IN_LED,U15,3,~,IO and safety
+ORIF_B1_IN_LED,U16,3,~,IO and safety
 ORIF_B1_N,R88,2,~,IO and safety
-ORIF_B1_N,U12,18,P15,IO and safety
-ORIF_B1_N,U15,14,~,IO and safety
-ORIF_B2_IN,J12,4,Pin_4,Field inputs
+ORIF_B1_N,U13,18,P15,IO and safety
+ORIF_B1_N,U16,14,~,IO and safety
+ORIF_B2_IN,J10,4,Pin_4,Field inputs
 ORIF_B2_IN,R102,1,~,IO and safety
 ORIF_B2_IN_LED,R102,2,~,IO and safety
-ORIF_B2_IN_LED,U15,5,~,IO and safety
+ORIF_B2_IN_LED,U16,5,~,IO and safety
 ORIF_B2_N,R89,2,~,IO and safety
-ORIF_B2_N,U12,19,P16,IO and safety
-ORIF_B2_N,U15,12,~,IO and safety
-SCL,J4,9,GPIO16,Controller
+ORIF_B2_N,U13,19,P16,IO and safety
+ORIF_B2_N,U16,12,~,IO and safety
 SCL,R27,2,~,Sensors and ADC
 SCL,TP11,1,1,Controller
-SCL,U11,11,PB0,Field inputs
-SCL,U12,22,SCL,IO and safety
+SCL,U12,11,PB0,Field inputs
 SCL,U13,22,SCL,IO and safety
-SCL,U3,22,SCL,Sensors and ADC
-SCL,U7,16,SCL,Sensors and ADC
+SCL,U14,22,SCL,IO and safety
+SCL,U2,9,J1-9 GPIO16,Controller
+SCL,U4,22,SCL,Sensors and ADC
 SCL,U8,16,SCL,Sensors and ADC
-SDA,J4,8,GPIO15,Controller
+SCL,U9,16,SCL,Sensors and ADC
 SDA,R26,2,~,Sensors and ADC
 SDA,TP10,1,1,Controller
-SDA,U11,10,PB1,Field inputs
-SDA,U12,23,SDA,IO and safety
+SDA,U12,10,PB1,Field inputs
 SDA,U13,23,SDA,IO and safety
-SDA,U3,23,SDA,Sensors and ADC
-SDA,U7,15,SDA,Sensors and ADC
+SDA,U14,23,SDA,IO and safety
+SDA,U2,8,J1-8 GPIO15,Controller
+SDA,U4,23,SDA,Sensors and ADC
 SDA,U8,15,SDA,Sensors and ADC
-SD_CD_N,J6,10,DET_A,Network and storage
+SDA,U9,15,SDA,Sensors and ADC
+SD_CD_N,J4,10,DET_A,Network and storage
 SD_CD_N,R24,2,~,Network and storage
-SD_CD_N,U12,20,P17,IO and safety
-SD_CLK,J6,5,CLK,Network and storage
+SD_CD_N,U13,20,P17,IO and safety
+SD_CLK,J4,5,CLK,Network and storage
 SD_CLK,R25,2,~,Network and storage
 SD_CLK,TP14,1,1,Network and storage
-SD_CLK_MCU,J5,7,GPIO41,Controller
 SD_CLK_MCU,R25,1,~,Network and storage
-SD_CMD,J5,18,GPIO21,Controller
-SD_CMD,J6,3,CMD,Network and storage
+SD_CLK_MCU,U2,29,J3-7 GPIO41,Controller
+SD_CMD,J4,3,CMD,Network and storage
 SD_CMD,R19,2,~,Network and storage
 SD_CMD,TP15,1,1,Network and storage
-SD_DAT0,J6,7,DAT0,Network and storage
+SD_CMD,U2,40,J3-18 GPIO21,Controller
+SD_DAT0,J4,7,DAT0,Network and storage
 SD_DAT0,JP2,2,B,Network and storage
 SD_DAT0,R20,2,~,Network and storage
 SD_DAT0,TP16,1,1,Network and storage
-SD_DAT0_MCU,J4,13,GPIO3,Controller
 SD_DAT0_MCU,JP2,1,A,Network and storage
-SD_DAT1,J6,8,DAT1,Network and storage
+SD_DAT0_MCU,U2,13,J1-13 GPIO3,Controller
+SD_DAT1,J4,8,DAT1,Network and storage
 SD_DAT1,R21,2,~,Network and storage
-SD_DAT2,J6,1,DAT2,Network and storage
+SD_DAT2,J4,1,DAT2,Network and storage
 SD_DAT2,R22,2,~,Network and storage
-SD_DAT3,J6,2,DAT3/CD,Network and storage
+SD_DAT3,J4,2,DAT3/CD,Network and storage
 SD_DAT3,R23,2,~,Network and storage
-SPI_MISO,J4,19,GPIO13,Controller
-SPI_MISO,U2,12,J2-6 MISO,Network and storage
-SPI_MOSI,J4,17,GPIO11,Controller
-SPI_MOSI,U2,3,J1-3 MOSI,Network and storage
-SPI_SCK,J4,18,GPIO12,Controller
+SPI_MISO,U2,19,J1-19 GPIO13,Controller
+SPI_MISO,U3,12,J2-6 MISO,Network and storage
+SPI_MOSI,U2,17,J1-17 GPIO11,Controller
+SPI_MOSI,U3,3,J1-3 MOSI,Network and storage
 SPI_SCK,TP13,1,1,Network and storage
-SPI_SCK,U2,4,J1-4 SCLK,Network and storage
-SWIRL_A,J4,15,GPIO9,Controller
-SWIRL_A,U9,4,~,Field inputs
-SWIRL_A_IN,J9,3,Pin_3,Field inputs
+SPI_SCK,U2,18,J1-18 GPIO12,Controller
+SPI_SCK,U3,4,J1-4 SCLK,Network and storage
+SWIRL_A,U10,4,~,Field inputs
+SWIRL_A,U2,15,J1-15 GPIO9,Controller
+SWIRL_A_IN,J7,3,Pin_3,Field inputs
 SWIRL_A_IN,R53,2,~,Field inputs
 SWIRL_A_IN,R54,1,~,Field inputs
 SWIRL_A_P,R54,2,~,Field inputs
-SWIRL_A_P,U9,3,~,Field inputs
-SWIRL_B,J4,16,GPIO10,Controller
-SWIRL_B,U9,6,~,Field inputs
-SWIRL_B_IN,J9,4,Pin_4,Field inputs
+SWIRL_A_P,U10,3,~,Field inputs
+SWIRL_B,U10,6,~,Field inputs
+SWIRL_B,U2,16,J1-16 GPIO10,Controller
+SWIRL_B_IN,J7,4,Pin_4,Field inputs
 SWIRL_B_IN,R55,2,~,Field inputs
 SWIRL_B_IN,R56,1,~,Field inputs
 SWIRL_B_P,R56,2,~,Field inputs
-SWIRL_B_P,U9,5,~,Field inputs
+SWIRL_B_P,U10,5,~,Field inputs
 WD_CEXT,C40,2,~,IO and safety
-WD_CEXT,U20,14,Cext,IO and safety
+WD_CEXT,U21,14,Cext,IO and safety
 WD_OK,R11,1,~,Power
 WD_OK,TP22,1,1,IO and safety
-WD_OK,U20,13,Q,IO and safety
+WD_OK,U21,13,Q,IO and safety
 WD_OK_B,Q6,1,B,Power
 WD_OK_B,R11,2,~,Power
 WD_OK_B,R12,1,~,Power
 WD_RC,C40,1,~,IO and safety
 WD_RC,R105,2,~,IO and safety
-WD_RC,U20,15,RCext,IO and safety
+WD_RC,U21,15,RCext,IO and safety
