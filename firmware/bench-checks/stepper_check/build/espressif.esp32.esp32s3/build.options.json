@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "runtime.tools.esp-x32.path=/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/tools/esp-x32/xtensa-esp-elf,runtime.tools.esp32s3-libs.path=/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/tools/esp32s3-libs/esp32s3-libs,runtime.tools.esptool_py.path=/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/tools/esptool_py/esptool-linux-amd64,runtime.tools.ctags.path=/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/ctags-src,build.warn_data_percentage=75",
+  "fqbn": "espressif:esp32:esp32s3:FlashMode=opi,PSRAM=opi,FlashSize=32M,CDCOnBoot=cdc",
+  "hardwareFolders": "/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/ard-data/packages,/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/ard/hardware",
+  "otherLibrariesFolders": "/tmp/claude-0/-home-claude/d83874a7-114e-58dc-9945-bd122333764e/scratchpad/ard/libraries",
+  "sketchLocation": "/home/claude/diy-flow-bench/firmware/bench-checks/stepper_check"
+}
