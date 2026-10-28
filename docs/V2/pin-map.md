@@ -4,6 +4,8 @@ Controller: **ESP32-S3-DevKitC-1-N32R8V** (ESP32-S3-WROOM-2-N32R8V module: 32 MB
 
 All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go through two TCA9535 I2C expanders. Analog inputs use ADC1 only, because ADC2 (GPIO11–20) can't be read while Wi-Fi is on.
 
+The W5500 has the SPI bus to itself. The microSD card is on its own bus, the ESP32-S3 SD host in 1-bit mode (3 pins), because the W5500 and an SD card sharing one SPI bus is a known source of failures. The pins came from moving the bleed stepper alarm to expander 2 and running the W5500 without its interrupt line (the driver polls it).
+
 ## GPIO
 
 | GPIO | Header pin | Function | Dir | Peripheral | Notes |
@@ -11,7 +13,7 @@ All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go thr
 | 0 | J3-14 | BOOT button | in | — | Strapping (boot mode). Not used. |
 | 1 | J3-4 | Motor 1 current | in | ADC1 ch0 | CT, 1.65 V bias |
 | 2 | J3-5 | Motor 2 current | in | ADC1 ch1 | CT, 1.65 V bias |
-| 3 | J1-13 | Bleed stepper alarm | in | GPIO interrupt | Opto input. Strapping (JTAG source); only read if that eFuse is burned |
+| 3 | J1-13 | microSD DAT0 | i/o | SD host (SDMMC), 1-bit | 10 k pull-up, which also keeps this strapping pin high at reset (JTAG over USB, the default) |
 | 4 | J1-4 | Motor 3 current | in | ADC1 ch3 | CT, 1.65 V bias |
 | 5 | J1-5 | Motor 4 current | in | ADC1 ch4 | CT, 1.65 V bias |
 | 6 | J1-6 | Motor 5 current | in | ADC1 ch5 | CT, 1.65 V bias |
@@ -19,9 +21,9 @@ All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go thr
 | 8 | J1-12 | MAF frequency | in | PCNT unit 0 | Schmitt buffer, for frequency-output MAFs |
 | 9 | J1-15 | Swirl encoder A | in | PCNT unit 1 | Schmitt buffer, quadrature |
 | 10 | J1-16 | Swirl encoder B | in | PCNT unit 1 | Schmitt buffer, quadrature |
-| 11 | J1-17 | SPI MOSI | out | SPI2 | Shared: W5500 and microSD |
-| 12 | J1-18 | SPI SCK | out | SPI2 | Shared: W5500 and microSD |
-| 13 | J1-19 | SPI MISO | in | SPI2 | Shared: W5500 and microSD |
+| 11 | J1-17 | SPI MOSI | out | SPI2 | W5500 only |
+| 12 | J1-18 | SPI SCK | out | SPI2 | W5500 only |
+| 13 | J1-19 | SPI MISO | in | SPI2 | W5500 only |
 | 14 | J1-20 | Ethernet CS | out | SPI2 | W5500 |
 | 15 | J1-8 | I2C SDA | i/o | I2C0, 400 kHz | ADCs, mux, expanders, Digimatic interface |
 | 16 | J1-9 | I2C SCL | out | I2C0 | 2.2 k pull-ups to 3.3 V |
@@ -29,12 +31,12 @@ All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go thr
 | 18 | J1-11 | Bleed stepper direction | out | GPIO | To AM26C31 #1, set ≥5 µs before a step |
 | 19 | J3-20 | USB D− | — | Native USB | Flashing, console, JTAG |
 | 20 | J3-19 | USB D+ | — | Native USB | Flashing, console, JTAG |
-| 21 | J3-18 | Ethernet interrupt | in | GPIO interrupt | W5500 INT |
+| 21 | J3-18 | microSD CMD | i/o | SD host (SDMMC) | 10 k pull-up |
 | 35–37 | J3-13…11 | Not available | — | — | Used by the octal flash and PSRAM |
 | 38 | J3-10 | Status LED | out | RMT | RGB LED on the DevKit |
 | 39 | J3-9 | Lift stepper step (PUL) | out | RMT | To AM26C31 #2 |
 | 40 | J3-8 | Lift stepper direction | out | GPIO | To AM26C31 #2 |
-| 41 | J3-7 | microSD CS | out | SPI2 | microSD on the shared SPI bus |
+| 41 | J3-7 | microSD CLK | out | SD host (SDMMC) | 33 Ω series resistor at the pin. DAT1–DAT3 get 10 k pull-ups and stay unconnected to the ESP32 |
 | 42 | J3-6 | Expander interrupt | in | GPIO interrupt | Both TCA9535 INT lines, open drain, wired together |
 | 43 | J3-2 | UART0 TX | out | UART0 | DevKit USB-UART port |
 | 44 | J3-3 | UART0 RX | in | UART0 | DevKit USB-UART port |
@@ -66,7 +68,8 @@ All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go thr
 | P02 | Lift stepper alarm | in | Opto input |
 | P03 | Lift actuator home switch | in | Opto input |
 | P04 | Lift actuator max-travel switch | in | Opto input |
-| P05–P17 | Spare | — | 11 pins free |
+| P05 | Bleed stepper alarm | in | Opto input; reads active when the drive's alarm transistor turns on |
+| P06–P17 | Spare | — | 10 pins free. W5500 INT can go to one of these later if polling isn't enough |
 
 ## I2C devices (I2C0, GPIO15/16)
 
@@ -115,3 +118,28 @@ All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go thr
 | 68 kΩ | 4.36 V | |
 
 No resistor (5 V) reads as unknown; a short (0 V) is a wiring fault.
+
+## Stepper alarm inputs
+
+The iCL42-08 alarm output (ALM+/ALM−) is an isolated, normally open collector: off while the drive is healthy, on when it faults. Each alarm drives an opto input:
+
+- +5 V → 470 Ω → opto LED anode; LED cathode → ALM+; ALM− → ground. About 7 mA through the drive's transistor, inside its 30 mA rating.
+- Opto on means alarm. Both alarms are on expander 2: bleed on P05, lift on P02. The expander interrupt (GPIO42) flags a change within a few milliseconds.
+
+A normally open alarm isn't fail-safe: a broken alarm wire, or a drive that has lost power, reads the same as a healthy drive. The firmware only enables the vacuum motors after it has seen the drive answer (it moves to home and the home switch changes state). The drive's tuning software can also set the alarm to normally closed; if that's set later, the firmware's alarm polarity setting flips to match, with no hardware change.
+
+## MAF inputs
+
+The MAF connector (GX12 7-pin) has a separate pin for each signal type, so analog and digital MAFs plug into the same socket. The harness wires the MAF's signal to the matching pin and leaves the other one empty.
+
+| Pin | Signal | Board circuit |
+| --- | --- | --- |
+| 1 | 12 V supply | Pololu 12 V, through a polyfuse |
+| 2 | Ground | |
+| 3 | Analog signal, 0–5 V | 1 k series, clamp, 0.4 divider (15 k over 10 k) to ADS1219 #1 AIN0 |
+| 4 | Frequency signal, 0–5 V or open collector | 1 k series, 10 k pull-down, solder jumper for a 4.7 k pull-up to 5 V (open-collector MAFs), 74LVC14 (5 V-tolerant inputs, 3.3 V supply) to GPIO8, PCNT |
+| 5 | Intake air temperature | Bias resistor from analog 5 V, to ADS1219 #1 AIN1. Value set to suit the MAF's sensor (for example 2.49 k for a 2.5 kΩ NTC) |
+| 6 | 5 V reference | Analog 5 V, for MAFs that need a reference |
+| 7 | Harness ID | 10 k bias to analog 5 V, to ADS1219 #2 AIN1 |
+
+The pull-down keeps the frequency input quiet when an analog MAF is fitted, so it never counts noise. Each MAF's inventory entry records its signal type (analog or frequency) and transfer function (volts → kg/h, or Hz → kg/h); the firmware reads the harness ID, looks up the entry and reads only that input. The Bosch 0280218335 is analog, 0–5 V, ID 1.0 kΩ.
