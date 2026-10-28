@@ -44,6 +44,22 @@ Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye
 - **eFuse current monitor** goes to ADS1219 #2 AIN0, so the firmware can read the bench's 24 V current.
 - **WIZ850io headers are 1 × 6,** not 2 × 6.
 
+## Board placement (rev A)
+
+`flowbench-main/place_rev_a.py` lays out the main board as a starting point for routing:
+
+- 220 × 160 mm outline, M3 mounting holes in the corners.
+- Top edge: 24 V input, stepper power and signals, motor-housing coils, lamp, E-stop. Bottom edge: MAF, current sensors, swirl, Digimatic, BME280, switches, orifice selector. The script turns each connector so its plug faces out.
+- DevKit antenna overhangs the left edge; WIZ850io RJ45 faces the right edge; ABP2 ports face the right edge.
+- ICs and modules at planned spots; every resistor, capacitor and small part packed next to the part it serves, at least 1 mm apart, for hand soldering.
+
+To run it:
+1. In the schematic: Tools → Update PCB from Schematic (F8). This brings in the four mounting holes as well.
+2. In the PCB editor: Tools → Scripting Console, then `exec(open(r"<path>/place_rev_a.py").read())`
+3. It prints how many parts it placed and lists any it couldn't.
+
+`placement-preview.png` is a simulation of the same placement, using approximate part sizes. The real result uses KiCad's actual footprint outlines, so expect small differences. Nothing is routed. Adjust placement by hand, then route (by hand, or with the Freerouting plugin as a first pass).
+
 ## Regenerating
 
 ```

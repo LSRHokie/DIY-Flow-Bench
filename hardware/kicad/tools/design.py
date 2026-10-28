@@ -115,6 +115,8 @@ def main_board(libdir):
         b.FLAG(n)
     for n in ['+24V', '+12V', '+5V', '+3V3', '+5VA', 'GND']:
         b.TP(n)
+    for _ in range(4):
+        b.part('H', 'MountingHole', 'M3 mounting hole', {}, footprint='MountingHole:MountingHole_3.2mm_M3')
 
     # ------------------------------------------------------------------ controller
     b.on(mcu)
@@ -411,6 +413,10 @@ if __name__ == '__main__':
         proj, nets, problems = fn(libdir)
         d = os.path.join(outdir, proj.name)
         proj.write(d)
+        if proj.name == 'flowbench-main':
+            import placement
+            anchors, passives = placement.write(proj, os.path.join(d, 'place_rev_a.py'))
+            print('  placement: %d anchors, %d passives -> place_rev_a.py' % (len(anchors), len(passives)))
         with open(os.path.join(d, 'netlist.csv'), 'w') as fh:
             fh.write('net,ref,pin,pin_name,sheet\n')
             for n in sorted(nets):

@@ -47,7 +47,7 @@ def load(project, libdir):
     for fn in ['Device.lib', 'Diode.lib', 'Connector.lib', 'Connector_Generic.lib', 'Jumper.lib', 'power.lib',
                'Transistor_BJT.lib', 'Transistor_FET.lib', 'Interface_Expansion.lib', 'Isolator.lib',
                'Transistor_Array.lib', 'Amplifier_Operational.lib', '74xx.lib', 'Regulator_Linear.lib',
-               'MCU_Microchip_ATtiny.lib', 'Power_Management.lib']:
+               'MCU_Microchip_ATtiny.lib', 'Power_Management.lib', 'Mechanical.lib']:
         lib.load(fn)
     S = {}
 
@@ -56,7 +56,7 @@ def load(project, libdir):
 
     for n in ['R', 'C', 'C_Polarized', 'Polyfuse', 'D_TVS', 'BAV99', 'TestPoint', 'PWR_FLAG',
               'SolderJumper_2_Bridged', 'SolderJumper_2_Open', 'SolderJumper_3_Bridged12',
-              'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det']:
+              'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det', 'MountingHole']:
         conv(n)
     # The Hirose DM3AT footprint names its shield pads "SH"; match the symbol's shield pin to it.
     for pin in S['Micro_SD_Card_Det'].pins:
