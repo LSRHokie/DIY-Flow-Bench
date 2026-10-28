@@ -145,7 +145,7 @@ def rect_symbol(name, ref='U', left=(), right=(), top=(), bottom=(), width=None,
     w = width or snap(max(10.16, 2 * longest * 1.0 + 5.08, (cols + 1) * 2.54))
     w = snap(w / 2) * 2
     h = snap((rows + 1) * 2.54)
-    if (h / 2) % GRID:
+    if abs(h / 2 / GRID - round(h / 2 / GRID)) > 1e-6:   # keep the half-height on the 1.27 mm grid
         h += GRID
     x0, x1, y1, y0 = -w / 2, w / 2, h / 2, -h / 2
     sym.graphics[0] = ['(rectangle (start %s %s) (end %s %s) %s %s)'
