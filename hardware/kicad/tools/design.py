@@ -90,12 +90,12 @@ def main_board(libdir):
     b.on(pw)
     pw.note('24 V arrives from the panel XT90 and 7 A breaker on J1. The plug-in power module (PM1) carries the TPS2663 eFuse and the TPS7A4901.')
     pw.note('PM1 returns protected +24V, and makes +5VA (analog 5 V) from +12V. Its eFuse fault and current-monitor outputs go to the expander and ADC #2.')
-    pw.note('Pololu D24V22Fx pin order is NOT verified: check it against the module before drawing the footprint.')
+    pw.note('Pololu D24V22Fx pinout confirmed from the board: PG, EN, VIN, GND, VOUT (1-5) plus a corner GND (6). EN and PG unused.')
     b.CONN(2, '24V IN', ['+24V_RAW', 'GND'], mstb(2))
     b.CONN(12, 'PM1 power socket', ['+24V_RAW'] * 4 + ['GND'] * 4 + ['+24V'] * 4, socket(12))
     b.CONN(6, 'PM1 signal socket', ['+12V', '+5VA', 'GND', 'EFUSE_FLT_N', 'EFUSE_IMON', 'GND'], socket(6))
-    b.part('PS', 'Pololu_D24V22Fx', 'D24V22F5 (5 V 2.5 A)', {3: '+24V', 2: None, 5: '+5V', 1: None, 4: 'GND'})
-    b.part('PS', 'Pololu_D24V22Fx', 'D24V22F12 (12 V 2.2 A)', {3: '+24V', 2: None, 5: '+12V', 1: None, 4: 'GND'})
+    b.part('PS', 'Pololu_D24V22Fx', 'D24V22F5 (5 V 2.5 A)', {3: '+24V', 2: None, 5: '+5V', 1: None, 4: 'GND', 6: 'GND'})
+    b.part('PS', 'Pololu_D24V22Fx', 'D24V22F12 (12 V 2.2 A)', {3: '+24V', 2: None, 5: '+12V', 1: None, 4: 'GND', 6: 'GND'})
     b.CP('22uF 35V', '+24V', fp=FP['CELEC'])
     b.C('10uF', '+5V', fp=FP['C1206'])
     b.C('10uF', '+12V', fp=FP['C1206'])
@@ -118,7 +118,8 @@ def main_board(libdir):
 
     # ------------------------------------------------------------------ controller
     b.on(mcu)
-    mcu.note('The DevKit plugs into two 22-pin sockets. Its own 3V3 pins are left open: the board makes +3V3 separately.')
+    mcu.note('The DevKit plugs into two 22-pin sockets, rows 25.4 mm (1.0 in) apart: one footprint, J1 = pads 1-22, J3 = pads 23-44.')
+    mcu.note('Its own 3V3 pins are left open: the board makes +3V3 separately. The N32R16V variant fits and works the same way.')
     mcu.note('GPIO35-37 are used by the octal flash and PSRAM. GPIO47/48 are 1.8 V on the WROOM-2 and stay unused.')
     j1 = {1: None, 2: None, 3: 'ESP_RST', 4: 'CT3', 5: 'CT4', 6: 'CT5', 7: 'CT6', 8: 'SDA', 9: 'SCL',
           10: 'BLEED_STEP', 11: 'BLEED_DIR', 12: 'MAF_FREQ', 13: 'SD_DAT0_MCU', 14: 'HEARTBEAT', 15: 'SWIRL_A',
@@ -126,8 +127,9 @@ def main_board(libdir):
     j3 = {1: 'GND', 2: 'ESP_TX', 3: 'ESP_RX', 4: 'CT1', 5: 'CT2', 6: 'EXP_INT_N', 7: 'SD_CLK_MCU',
           8: 'LIFT_DIR', 9: 'LIFT_STEP', 10: None, 11: None, 12: None, 13: None, 14: None, 15: None, 16: None,
           17: None, 18: 'SD_CMD', 19: None, 20: None, 21: 'GND', 22: 'GND'}
-    b.part('J', 'DevKitC-1_J1', 'ESP32-S3-DevKitC-1 J1', j1)
-    b.part('J', 'DevKitC-1_J3', 'ESP32-S3-DevKitC-1 J3', j3)
+    dk = dict(j1)
+    dk.update({k + 22: v for k, v in j3.items()})
+    b.part('U', 'ESP32-S3-DevKitC-1', 'ESP32-S3-DevKitC-1-N32R8V', dk)
     b.R('10k', 'HEARTBEAT', 'GND')     # GPIO46 strapping: held low at boot
     b.R('10k', 'BLEED_STEP', 'GND')
     b.R('10k', 'LIFT_STEP', 'GND')
@@ -136,11 +138,11 @@ def main_board(libdir):
 
     # ------------------------------------------------------------------ network and storage
     b.on(net)
-    net.note('WIZ850io: two 1x6 sockets. Check the J1-J2 spacing against the WIZnet mechanical drawing before layout.')
+    net.note('WIZ850io: one footprint with both 1x6 sockets (J1 = pads 1-6, J2 = pads 7-12), rows 17.78 mm (0.7 in) apart.')
     net.note('The W5500 is polled (no interrupt). JP3 routes INTn to expander 2 P06 if polling is not enough.')
     net.note('microSD on the ESP32-S3 SD host, 1-bit mode. JP1 can disconnect DAT0 from GPIO3 (a strapping pin) if it upsets boot.')
-    b.part('J', 'WIZ850io_J1', 'WIZ850io J1', {1: 'GND', 2: 'GND', 3: 'SPI_MOSI', 4: 'SPI_SCK', 5: 'ETH_CS', 6: 'ETH_INT_N'})
-    b.part('J', 'WIZ850io_J2', 'WIZ850io J2', {1: 'GND', 2: '+3V3', 3: '+3V3', 4: None, 5: 'ETH_RST_N', 6: 'SPI_MISO'})
+    b.part('U', 'WIZ850io', 'WIZ850io', {1: 'GND', 2: 'GND', 3: 'SPI_MOSI', 4: 'SPI_SCK', 5: 'ETH_CS', 6: 'ETH_INT_N',
+           7: 'GND', 8: '+3V3', 9: '+3V3', 10: None, 11: 'ETH_RST_N', 12: 'SPI_MISO'})
     b.R('10k', '+3V3', 'ETH_CS')
     b.R('10k', '+3V3', 'ETH_INT_N')
     b.R('10k', '+3V3', 'ETH_RST_N')
@@ -148,7 +150,7 @@ def main_board(libdir):
     b.C('10uF', '+3V3', fp=FP['C1206'])
     b.C('100nF', '+3V3')
     b.part('J', 'Micro_SD_Card_Det', 'microSD push-push', {1: 'SD_DAT2', 2: 'SD_DAT3', 3: 'SD_CMD', 4: '+3V3',
-           5: 'SD_CLK', 6: 'GND', 7: 'SD_DAT0', 8: 'SD_DAT1', 9: 'GND', 10: 'SD_CD_N', 11: 'GND'},
+           5: 'SD_CLK', 6: 'GND', 7: 'SD_DAT0', 8: 'SD_DAT1', 9: 'GND', 10: 'SD_CD_N', 'SH': 'GND'},
            footprint='Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5')
     for n in ['SD_CMD', 'SD_DAT0', 'SD_DAT1', 'SD_DAT2', 'SD_DAT3', 'SD_CD_N']:
         b.R('10k', '+3V3', n)
@@ -178,8 +180,8 @@ def main_board(libdir):
         b.R('4.7k', '+3V3', 'MUX%d_SDA' % ch)
         b.R('4.7k', '+3V3', 'MUX%d_SCL' % ch)
     for ch, name in enumerate(['Reference', 'Orifice', 'Pitot']):
-        b.part('U', 'ABP2_I2C', 'ABP2DRRN100MD2A3XX', {1: '+3V3', 2: 'MUX%d_SCL' % ch, 3: None, 4: 'MUX%d_SDA' % ch,
-               5: 'GND', 6: None}, fields={'Function': name + ' pressure'})
+        b.part('U', 'ABP2_I2C', 'ABP2DRRN100MD2A3XX', {1: 'GND', 2: '+3V3', 3: None, 4: None,
+               5: 'MUX%d_SDA' % ch, 6: 'MUX%d_SCL' % ch}, fields={'Function': name + ' pressure'})
         b.C('100nF', '+3V3')
     b.CONN(4, 'BME280 (GX12-4)', ['+3V3', 'GND', 'MUX3_SDA', 'MUX3_SCL'], mc(4))
     b.part('U', 'ADS1219', 'ADS1219 #1 (0x40)', {11: 'MAF_SIG_ADC', 10: 'MAF_IAT_ADC', 7: 'MON_5VA', 6: 'MON_24V',

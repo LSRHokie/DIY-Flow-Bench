@@ -7,7 +7,7 @@ Two KiCad projects, generated from `tools/design.py`:
 | `flowbench-main/` | `flowbench-main.kicad_pro` | Main board, 6 sheets: Power, Controller, Network and storage, Sensors and ADC, Field inputs, IO and safety. 239 parts, 180 nets. |
 | `flowbench-power-module/` | `flowbench-power-module.kicad_pro` | PM1, the plug-in input power module: TPS26631 eFuse with reverse blocking, TPS7A4901 analog 5 V. 33 parts. |
 
-The files are KiCad 7 format and open in KiCad 7, 8 and 9 (8 and 9 offer to upgrade the format when you save). Each project carries its own symbol library (`FlowBench.kicad_sym`, registered in the project's `sym-lib-table`), so nothing else needs installing.
+The files are KiCad 7 format and open in KiCad 7, 8 and 9 (8 and 9 offer to upgrade the format when you save). Each project carries its own symbol library (`FlowBench.kicad_sym`, registered in `sym-lib-table`) and, for footprints KiCad lacks, a footprint library (`FlowBench.pretty`, registered in `fp-lib-table`), so nothing else needs installing.
 
 ## How the schematic is drawn
 
@@ -26,10 +26,10 @@ Notes at the top of each sheet explain the design choices on that sheet. `netlis
 
 Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye:
 
-1. **Pololu D24V22F5 / F12 pin order** (`Pololu_D24V22Fx`, pins PG, EN, VIN, GND, VOUT): Pololu's page lists the pins but not their order along the board. Check against the module before drawing its footprint.
-2. **ABP2 pinout and footprint:** from Honeywell's I2C table (1 VDD, 2 SCL, 3 EOC, 4 SDA, 5 GND, 6 NC). KiCad has no ABP2 footprint; one has to be drawn from the datasheet.
-3. **WIZ850io:** two 1 × 6 sockets (J1: GND, GND, MOSI, SCLK, SCNn, INTn; J2: GND, 3V3D, 3V3D, NC, RSTn, MISO). Take their spacing from WIZnet's mechanical drawing.
-4. **DevKit sockets:** the pin-by-pin map follows `docs/V2/pin-map.md`. Take the row spacing from Espressif's drawing.
+1. **Pololu D24V22F5 / F12:** pinout confirmed from the board (PG, EN, VIN, GND, VOUT down one edge, plus a corner GND level with PG). Its footprint is `FlowBench:Pololu_D24V22Fx` in the project's own footprint library. The corner pad sits 0.4 in from the row, read from Pololu's photo: check it with a caliper before ordering boards.
+2. **ABP2:** pinout from Honeywell datasheet 32350268, Table 21 (I2C: 1 GND, 2 VDD, 3 EOC, 4 NC, 5 SDA, 6 SCL). Footprint `FlowBench:Honeywell_ABP2_DIP` from Figure 13: 2.54 mm pitch, rows 11.00 mm apart, 0.73 mm holes. The barbed ports leave the body on the pin 3/4 side; leave room there for the tubing.
+3. **WIZ850io:** confirmed from the module (20 × 25 mm, two 1 × 6 headers). One part and one footprint, `FlowBench:WIZ850io`: J1 is pads 1–6, J2 is pads 7–12, rows 17.78 mm (0.7 in) apart, pin 1 nearest the RJ45. Place it with the jack facing the board edge.
+4. **DevKit:** header pinout confirmed against Espressif's J1/J3 tables, row spacing measured at 25.4 mm (1.0 in). One part and one footprint, `FlowBench:ESP32-S3-DevKitC-1`: J1 is pads 1–22, J3 is pads 23–44, pin 1 at the antenna end. Let the antenna overhang the board edge or keep copper out from under it. The N32R16V variant fits the same footprint.
 5. **Custom symbols** drawn from datasheets: ADS1219 (TSSOP-16), AM26C31 (SOIC-16), TPS7A4901 (MSOP-8 PowerPAD). Worth one look each against the datasheet pin table.
 6. **Footprint names** follow KiCad's standard libraries. If KiCad flags one as missing when you update the PCB, it's a name to pick from your library, not a circuit problem. The microSD socket (Hirose DM3AT) and the TLP291-4 footprint are the likeliest.
 7. **TPS26631 choices** on the power module: PGTH and PGOOD tied to GND (power-good unused), SHDN left open (internal pull-up), MODE open (latch-off). The library symbol has pin 20 as OUT; TI's pin table lists it as N.C., so tying it to OUT is harmless.

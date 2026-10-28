@@ -58,6 +58,10 @@ def load(project, libdir):
               'SolderJumper_2_Bridged', 'SolderJumper_2_Open', 'SolderJumper_3_Bridged12',
               'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det']:
         conv(n)
+    # The Hirose DM3AT footprint names its shield pads "SH"; match the symbol's shield pin to it.
+    for pin in S['Micro_SD_Card_Det'].pins:
+        if pin.num == '11':
+            pin.num = 'SH'
     for k in (2, 3, 4, 5, 6, 7, 8, 10, 12):
         conv('Conn_01x%02d' % k)
     conv('TCA9535PWR', fp='Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm')
@@ -99,37 +103,42 @@ def load(project, libdir):
         bottom=[('4', 'GND', 'power_in'), ('9', 'PAD', 'passive')],
         footprint='Package_SO:MSOP-8-1EP_3x3mm_P0.65mm_EP1.68x1.88mm_ThermalVias',
         datasheet='https://www.ti.com/lit/ds/symlink/tps7a49.pdf', description='36 V low-noise LDO, adjustable'))
-    S['ABP2_I2C'] = project.sym(rect_symbol(   # Honeywell ABP2 datasheet: DIP, I2C output
+    S['ABP2_I2C'] = project.sym(rect_symbol(   # Honeywell ABP2 datasheet 32350268, Table 21 (I2C sensor)
         'ABP2_I2C', 'U',
-        left=[('6', 'NC', 'no_connect'), ('3', 'EOC', 'output')],
-        right=[('4', 'SDA', 'bidirectional'), ('2', 'SCL', 'input')],
-        top=[('1', 'VDD', 'power_in')], bottom=[('5', 'GND', 'power_in')],
-        footprint='', description='Honeywell ABP2 pressure sensor, I2C, DIP. VERIFY PINOUT before layout'))
+        left=[('4', 'NC', 'no_connect'), ('3', 'EOC', 'output')],
+        right=[('5', 'SDA', 'bidirectional'), ('6', 'SCL', 'input')],
+        top=[('2', 'VDD', 'power_in')], bottom=[('1', 'GND', 'power_in')],
+        footprint='FlowBench:Honeywell_ABP2_DIP',
+        datasheet='https://automation.honeywell.com/us/en/products/sensing-solutions/sensors/pressure-sensors/board-mount-pressure-sensors/basic-abp2-series',
+        description='Honeywell ABP2 pressure sensor, DIP, I2C: 1 GND, 2 VDD, 3 EOC, 4 NC, 5 SDA, 6 SCL'))
     S['Pololu_D24V22Fx'] = project.sym(rect_symbol(
         'Pololu_D24V22Fx', 'PS',
         left=[('3', 'VIN', 'power_in'), ('2', 'EN', 'input')],
         right=[('5', 'VOUT', 'power_out'), ('1', 'PG', 'open_collector')],
-        bottom=[('4', 'GND', 'power_in')],
-        footprint=socket(5),
+        bottom=[('4', 'GND', 'power_in'), ('6', 'GND', 'power_in')],
+        footprint='FlowBench:Pololu_D24V22Fx',
         datasheet='https://www.pololu.com/product/2858',
-        description='Pololu D24V22Fx step-down module. VERIFY pin order on the board before layout'))
+        description='Pololu D24V22Fx step-down module: pins 1-5 PG, EN, VIN, GND, VOUT; pin 6 corner GND'))
     devkit_j1 = ['3V3', '3V3', 'RST', 'GPIO4', 'GPIO5', 'GPIO6', 'GPIO7', 'GPIO15', 'GPIO16', 'GPIO17', 'GPIO18',
                  'GPIO8', 'GPIO3', 'GPIO46', 'GPIO9', 'GPIO10', 'GPIO11', 'GPIO12', 'GPIO13', 'GPIO14', '5V', 'GND']
     devkit_j3 = ['GND', 'TX/GPIO43', 'RX/GPIO44', 'GPIO1', 'GPIO2', 'GPIO42', 'GPIO41', 'GPIO40', 'GPIO39',
                  'GPIO38', 'GPIO37', 'GPIO36', 'GPIO35', 'GPIO0', 'GPIO45', 'GPIO48', 'GPIO47', 'GPIO21', 'GPIO20',
                  'GPIO19', 'GND', 'GND']
-    S['DevKitC-1_J1'] = project.sym(rect_symbol(
-        'DevKitC-1_J1', 'J', right=[(str(i + 1), n) for i, n in enumerate(devkit_j1)], footprint=socket(22),
-        description='ESP32-S3-DevKitC-1 header J1 (socket on the board)'))
-    S['DevKitC-1_J3'] = project.sym(rect_symbol(
-        'DevKitC-1_J3', 'J', left=[(str(i + 1), n) for i, n in enumerate(devkit_j3)], footprint=socket(22),
-        description='ESP32-S3-DevKitC-1 header J3 (socket on the board)'))
-    S['WIZ850io_J1'] = project.sym(rect_symbol(   # WIZnet WIZ850io docs
-        'WIZ850io_J1', 'J', right=[('1', 'GND'), ('2', 'GND'), ('3', 'MOSI'), ('4', 'SCLK'), ('5', 'SCNn'),
-                                   ('6', 'INTn')], footprint=socket(6),
-        description='WIZ850io J1 (socket on the board)'))
-    S['WIZ850io_J2'] = project.sym(rect_symbol(
-        'WIZ850io_J2', 'J', right=[('1', 'GND'), ('2', '3V3D'), ('3', '3V3D'), ('4', 'NC'), ('5', 'RSTn'),
-                                   ('6', 'MISO')], footprint=socket(6),
-        description='WIZ850io J2 (socket on the board)'))
+    def dk_type(n):
+        return 'power_in' if n in ('5V', 'GND') else 'passive'
+    S['ESP32-S3-DevKitC-1'] = project.sym(rect_symbol(   # Espressif user guide, header tables J1 and J3
+        'ESP32-S3-DevKitC-1', 'U',
+        left=[(str(i + 1), 'J1-%d %s' % (i + 1, n), dk_type(n)) for i, n in enumerate(devkit_j1)],
+        right=[(str(i + 23), 'J3-%d %s' % (i + 1, n), dk_type(n)) for i, n in enumerate(devkit_j3)],
+        footprint='FlowBench:ESP32-S3-DevKitC-1',
+        datasheet='https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/user_guide.html',
+        description='ESP32-S3-DevKitC-1 (N32R8V or N32R16V) on two 1x22 sockets, rows 25.4 mm apart. J1 = pads 1-22, J3 = pads 23-44'))
+    S['WIZ850io'] = project.sym(rect_symbol(   # WIZnet WIZ850io: J1 = pads 1-6, J2 = pads 7-12
+        'WIZ850io', 'U',
+        left=[('1', 'J1-1 GND', 'power_in'), ('2', 'J1-2 GND', 'power_in'), ('3', 'J1-3 MOSI', 'input'),
+              ('4', 'J1-4 SCLK', 'input'), ('5', 'J1-5 SCNn', 'input'), ('6', 'J1-6 INTn', 'open_collector')],
+        right=[('7', 'J2-1 GND', 'power_in'), ('8', 'J2-2 3V3D', 'power_in'), ('9', 'J2-3 3V3D', 'power_in'),
+               ('10', 'J2-4 NC', 'no_connect'), ('11', 'J2-5 RSTn', 'input'), ('12', 'J2-6 MISO', 'output')],
+        footprint='FlowBench:WIZ850io',
+        description='WIZnet WIZ850io W5500 Ethernet module on two 1x6 sockets, 17.78 mm apart'))
     return S
