@@ -37,6 +37,14 @@ The goal is **one fixed build**: the only part that varies between benches is th
 - BME280 start-up no longer freezes the controller when no sensor answers.
 - Supply-voltage helpers returned millivolts instead of volts.
 - `platformio.ini` `data_dir` path case, which broke builds on Linux.
+- `sensors.cpp` included `mafData.h`, but the file is `mafdata.h`, which broke builds on Linux.
+- `API.cpp` used the ESP32-only ROM CRC header; it now uses `esp_rom_crc.h`, which works on the ESP32 and the ESP32-S3.
+
+## Building for the V2 controller
+
+The default PlatformIO environment is `esp32s3-n32r8v`: the ESP32-S3-DevKitC-1-N32R8V on the pioarduino platform (ESP32 Arduino core 3.x), with octal flash and PSRAM and the 32 MB partition table `partitions-s3-32MB.csv` (two 6 MB app slots for OTA updates, 8 MB SPIFFS, about 12 MB left free for later). The firmware compiles for this target on core 3.3.12: about 1.24 MB of program and 86 KB of static RAM. The serial console is the DevKit's native USB port.
+
+The old `esp32dev` environment is kept for the original board until the V2 firmware drops it.
 
 ## License
 
