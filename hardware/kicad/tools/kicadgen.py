@@ -387,6 +387,17 @@ class Project:
         open(os.path.join(outdir, 'sym-lib-table'), 'w').write(
             '(sym_lib_table\n  (lib (name "%s")(type "KiCad")(uri "${KIPRJMOD}/%s.kicad_sym")(options "")'
             '(descr "DIY Flow Bench V2 project symbols"))\n)\n' % (self.libname, self.libname))
+        import footprints
+        used_fps = {p.footprint.split(':', 1)[1] for sh in self.sheets for p in sh.parts
+                    if p.footprint.startswith(self.libname + ':')}
+        if used_fps:
+            fpdir = os.path.join(outdir, self.libname + '.pretty')
+            os.makedirs(fpdir, exist_ok=True)
+            for name in sorted(used_fps):
+                open(os.path.join(fpdir, name + '.kicad_mod'), 'w').write(footprints.ALL[name]())
+            open(os.path.join(outdir, 'fp-lib-table'), 'w').write(
+                '(fp_lib_table\n  (lib (name "%s")(type "KiCad")(uri "${KIPRJMOD}/%s.pretty")(options "")'
+                '(descr "DIY Flow Bench V2 project footprints"))\n)\n' % (self.libname, self.libname))
         for page, sh in enumerate(self.sheets, start=2):
             self._write_sheet(outdir, sh, page)
         self._write_root(outdir)

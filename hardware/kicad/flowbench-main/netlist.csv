@@ -443,7 +443,9 @@ GND,J8,6,VSS,Network and storage
 GND,J8,9,DET_B,Network and storage
 GND,J9,2,Pin_2,Sensors and ADC
 GND,PS1,4,GND,Power
+GND,PS1,6,GND,Power
 GND,PS2,4,GND,Power
+GND,PS2,6,GND,Power
 GND,Q2,2,E,Power
 GND,Q4,2,E,Power
 GND,Q6,2,E,Power

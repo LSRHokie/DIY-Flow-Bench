@@ -109,10 +109,10 @@ def load(project, libdir):
         'Pololu_D24V22Fx', 'PS',
         left=[('3', 'VIN', 'power_in'), ('2', 'EN', 'input')],
         right=[('5', 'VOUT', 'power_out'), ('1', 'PG', 'open_collector')],
-        bottom=[('4', 'GND', 'power_in')],
-        footprint=socket(5),
+        bottom=[('4', 'GND', 'power_in'), ('6', 'GND', 'power_in')],
+        footprint='FlowBench:Pololu_D24V22Fx',
         datasheet='https://www.pololu.com/product/2858',
-        description='Pololu D24V22Fx step-down module. VERIFY pin order on the board before layout'))
+        description='Pololu D24V22Fx step-down module: pins 1-5 PG, EN, VIN, GND, VOUT; pin 6 corner GND'))
     devkit_j1 = ['3V3', '3V3', 'RST', 'GPIO4', 'GPIO5', 'GPIO6', 'GPIO7', 'GPIO15', 'GPIO16', 'GPIO17', 'GPIO18',
                  'GPIO8', 'GPIO3', 'GPIO46', 'GPIO9', 'GPIO10', 'GPIO11', 'GPIO12', 'GPIO13', 'GPIO14', '5V', 'GND']
     devkit_j3 = ['GND', 'TX/GPIO43', 'RX/GPIO44', 'GPIO1', 'GPIO2', 'GPIO42', 'GPIO41', 'GPIO40', 'GPIO39',
