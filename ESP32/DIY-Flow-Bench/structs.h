@@ -233,6 +233,7 @@ struct DeviceStatus {
   int serialData = 0;
   String statusMessage = BOOT_MESSAGE;
   bool apMode = false;
+  bool bmeAvailable = false;  // true once a BME280 has answered at startup
   double HWMBME = 0.0;
   double HWMADC = 0.0;
   double HWMSSE = 0.0;

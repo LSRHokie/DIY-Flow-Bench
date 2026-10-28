@@ -98,39 +98,41 @@ void Sensors::begin () {
 
 
 	//initialise BME280
-        if (config.iBME_TYP == BOSCH_BME280) {
+	// Tries the configured address first, then the other standard address (0x76 / 0x77).
+	// If no sensor answers, the bench keeps running on the fixed temperature, humidity
+	// and baro values from the configuration and shows a warning, instead of freezing.
+	if (config.iBME_TYP == BOSCH_BME280) {
 
-                uint8_t activeAddress = 0x77; 
-                _message.serialPrintf("Initialising BME280: Attempting Address 0x77...\n");        
+		uint8_t firstAddress = (config.iBME_ADDR == 0x76 || config.iBME_ADDR == 0x77) ? (uint8_t)config.iBME_ADDR : 0x77;
+		uint8_t secondAddress = (firstAddress == 0x77) ? 0x76 : 0x77;
+		uint8_t activeAddress = 0;
 
-                // First attempt at 0x77
-                if (_BME280Sensor.beginI2C(activeAddress) == false) {
-                        
-                        // If 0x77 fails, switch to 0x76 and try again
-                        activeAddress = 0x76;
-                        _message.serialPrintf("- Not found at 0x77. Attempting Address 0x76...\n");
-                        
-                        // Second attempt at 0x76
-                        if (_BME280Sensor.beginI2C(activeAddress) == false) {
-                                // Both attempts failed, throw the standard error and freeze
-                                _message.serialPrintf("BME sensor did not respond. \n");
-                                _message.serialPrintf("Please check wiring and I2C address\n");
-                                _message.serialPrintf("Attempted both 0x77 and 0x76 without success. \n");
-                                while(1); //Freeze
-                        }
-                }
-                
-                // If either attempt succeeds, it skips the freeze and continues here
-                _message.serialPrintf("BME280 Initialised successfully at 0x%02X\n", activeAddress);
+		_message.serialPrintf("Initialising BME280: trying 0x%02X\n", firstAddress);
+		if (_BME280Sensor.beginI2C(firstAddress)) {
+			activeAddress = firstAddress;
+		} else {
+			_message.serialPrintf("- Not found at 0x%02X, trying 0x%02X\n", firstAddress, secondAddress);
+			if (_BME280Sensor.beginI2C(secondAddress)) {
+				activeAddress = secondAddress;
+			}
+		}
 
-                _BME280Sensor.setTempOverSample(1);
-                _BME280Sensor.setPressureOverSample(1);
-                _BME280Sensor.setHumidityOverSample(1);
-                _BME280Sensor.setStandbyTime(0);
-                _BME280Sensor.setFilter(0);
-                _BME280Sensor.setMode(tiny::Mode::NORMAL); // NORMAL / FORCED / SLEEP
-
-        }
+		if (activeAddress == 0) {
+			status.bmeAvailable = false;
+			_message.serialPrintf("BME280 did not respond at 0x76 or 0x77. Check wiring.\n");
+			_message.serialPrintf("Using fixed temperature, humidity and baro values until it is fixed.\n");
+			status.statusMessage = "BME280 not found - using fixed values";
+		} else {
+			status.bmeAvailable = true;
+			_message.serialPrintf("BME280 initialised at 0x%02X\n", activeAddress);
+			_BME280Sensor.setTempOverSample(1);
+			_BME280Sensor.setPressureOverSample(1);
+			_BME280Sensor.setHumidityOverSample(1);
+			_BME280Sensor.setStandbyTime(0);
+			_BME280Sensor.setFilter(0);
+			_BME280Sensor.setMode(tiny::Mode::NORMAL); // NORMAL / FORCED / SLEEP
+		}
+	}
 
 
 	//initialise BME680
@@ -664,6 +666,7 @@ double Sensors::getPRefValue() {
 		case XGZP6899A007KPDPN :
 			// Linear response. Range = 0.5 ~ 4.5 = -7 ~ 7kPa
 			returnVal = sensorVal.PRefVolts * 3.5 - 8.75;
+			break;
 
 		case XGZP6899A010KPDPN:
 			// Linear response. Range = 0.5 ~ 4.5 = -10 ~ 10kPa
@@ -787,6 +790,7 @@ double Sensors::getPDiffValue() {
 			case XGZP6899A007KPDPN:
 				// Linear response. Range = 0.5 ~ 4.5 = -7 ~ 7kPa
 				returnVal = sensorVal.PDiffVolts * 3.5 - 8.75;
+			break;
 
 			case XGZP6899A010KPDPN:
 				// Linear response. Range = 0.5 ~ 4.5 = -10 ~ 10kPa
@@ -920,6 +924,7 @@ double Sensors::getPitotValue() {
 		case XGZP6899A007KPDPN:
 			// Linear response. Range = 0.5 ~ 4.5 = -7 ~ 7kPa
 			returnVal = sensorVal.PitotVolts * 3.5 - 8.75;
+			break;
 
 		case XGZP6899A010KPDPN:
 			// Linear response. Range = 0.5 ~ 4.5 = -10 ~ 10kPa
@@ -1014,6 +1019,7 @@ double Sensors::getTempValue() {
 	Messages _message;
 
 	extern struct SensorData sensorVal;
+	extern struct DeviceStatus status;
 	extern struct Configuration config;
 	extern struct Pins pins;
 
@@ -1034,7 +1040,8 @@ double Sensors::getTempValue() {
 		}
 
 		case BOSCH_BME280 : {
-			refTempDegC = _BME280Sensor.readFixedTempC() / 100.00F;
+			// Fall back to the fixed value if the BME280 did not answer at startup
+			refTempDegC = status.bmeAvailable ? _BME280Sensor.readFixedTempC() / 100.00F : config.dFIXED_TEMP_VAL;
 			break;
 		}
 
@@ -1084,6 +1091,7 @@ double Sensors::getBaroValue() {
 	Hardware _hardware;
 	Messages _message;
 
+	extern struct DeviceStatus status;
 	extern struct Configuration config;
 	extern struct Pins pins;
 
@@ -1114,7 +1122,8 @@ double Sensors::getBaroValue() {
 		}
 
 		case BOSCH_BME280: {
-			baroPressureHpa = _BME280Sensor.readFixedPressure() / 100.00F; 
+			// Fall back to the configured sea-level pressure if the BME280 did not answer at startup
+			baroPressureHpa = status.bmeAvailable ? _BME280Sensor.readFixedPressure() / 100.00F : config.dSEALEVEL_PRESS; 
 			break;
 		}
 
@@ -1157,6 +1166,7 @@ double Sensors::getRelHValue() {
 	Hardware _hardware;
 	Messages _message;
 
+	extern struct DeviceStatus status;
 	extern struct Configuration config;
 	extern struct Pins pins;
 
@@ -1191,7 +1201,8 @@ double Sensors::getRelHValue() {
 		}
 
 		case BOSCH_BME280: {
-			relativeHumidity = _BME280Sensor.readFixedHumidity() / 1000.00F;
+			// Fall back to the fixed value if the BME280 did not answer at startup
+			relativeHumidity = status.bmeAvailable ? _BME280Sensor.readFixedHumidity() / 1000.00F : config.dFIXED_RELH_VAL;
 			break;
 		}
 
