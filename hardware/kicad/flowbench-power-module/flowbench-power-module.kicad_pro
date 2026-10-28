@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "filename": "flowbench-power-module.kicad_pro",
+    "version": 1
+  },
+  "sheets": [
+    [
+      "4fa004d2-e707-4698-b192-e9473ca0f635",
+      ""
+    ],
+    [
+      "fd5b1486-6780-4e25-a252-a49d3f2e4e66",
+      "Power module"
+    ]
+  ],
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "boards": [],
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "text_variables": {}
+}

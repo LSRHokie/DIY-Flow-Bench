@@ -10,6 +10,7 @@ The goal is **one fixed build**: the only part that varies between benches is th
 | --- | --- |
 | [pin-map.md](pin-map.md) | ESP32-S3 GPIO, I/O expander, I2C address and ADC channel maps |
 | [bom.csv](bom.csv) | Current bill of materials |
+| [../../hardware/kicad](../../hardware/kicad) | KiCad schematics for the main board and the power module (rev A) |
 
 ## Architecture
 
