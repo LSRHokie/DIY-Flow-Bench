@@ -58,6 +58,10 @@ def load(project, libdir):
               'SolderJumper_2_Bridged', 'SolderJumper_2_Open', 'SolderJumper_3_Bridged12',
               'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det']:
         conv(n)
+    # The Hirose DM3AT footprint names its shield pads "SH"; match the symbol's shield pin to it.
+    for pin in S['Micro_SD_Card_Det'].pins:
+        if pin.num == '11':
+            pin.num = 'SH'
     for k in (2, 3, 4, 5, 6, 7, 8, 10, 12):
         conv('Conn_01x%02d' % k)
     conv('TCA9535PWR', fp='Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm')

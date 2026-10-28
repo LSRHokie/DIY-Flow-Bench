@@ -150,7 +150,7 @@ def main_board(libdir):
     b.C('10uF', '+3V3', fp=FP['C1206'])
     b.C('100nF', '+3V3')
     b.part('J', 'Micro_SD_Card_Det', 'microSD push-push', {1: 'SD_DAT2', 2: 'SD_DAT3', 3: 'SD_CMD', 4: '+3V3',
-           5: 'SD_CLK', 6: 'GND', 7: 'SD_DAT0', 8: 'SD_DAT1', 9: 'GND', 10: 'SD_CD_N', 11: 'GND'},
+           5: 'SD_CLK', 6: 'GND', 7: 'SD_DAT0', 8: 'SD_DAT1', 9: 'GND', 10: 'SD_CD_N', 'SH': 'GND'},
            footprint='Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5')
     for n in ['SD_CMD', 'SD_DAT0', 'SD_DAT1', 'SD_DAT2', 'SD_DAT3', 'SD_CD_N']:
         b.R('10k', '+3V3', n)

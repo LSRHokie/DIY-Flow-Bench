@@ -427,9 +427,9 @@ GND,J2,7,Pin_7,Power
 GND,J2,8,Pin_8,Power
 GND,J3,3,Pin_3,Power
 GND,J3,6,Pin_6,Power
-GND,J4,11,SHIELD,Network and storage
 GND,J4,6,VSS,Network and storage
 GND,J4,9,DET_B,Network and storage
+GND,J4,SH,SHIELD,Network and storage
 GND,J5,2,Pin_2,Sensors and ADC
 GND,J6,2,Pin_2,Field inputs
 GND,J7,2,Pin_2,Field inputs
