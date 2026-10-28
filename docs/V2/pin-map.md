@@ -4,7 +4,7 @@ Controller: **ESP32-S3-DevKitC-1-N32R8V** (ESP32-S3-WROOM-2-N32R8V module: 32 MB
 
 All 24 general-purpose GPIO the DevKit exposes are assigned. Slow signals go through two TCA9535 I2C expanders. Analog inputs use ADC1 only, because ADC2 (GPIO11–20) can't be read while Wi-Fi is on.
 
-The W5500 has the SPI bus to itself. The microSD card is on its own bus, the ESP32-S3 SD host in 1-bit mode (3 pins), because the W5500 and an SD card sharing one SPI bus is a known source of failures. The pins came from moving the bleed stepper alarm to expander 2 and running the W5500 without its interrupt line (the driver polls it).
+The WIZ850io Ethernet module (W5500) plugs into the main board and has the SPI bus to itself. The microSD card is on its own bus, the ESP32-S3 SD host in 1-bit mode (3 pins), because the W5500 and an SD card sharing one SPI bus is a known source of failures. The pins came from moving the bleed stepper alarm to expander 2 and running the W5500 without its interrupt line (the driver polls it). Solder jumper JP3 connects the interrupt to expander 2 P06 if polling isn't enough, and JP1 can disconnect DAT0 from GPIO3 if the card ever upsets boot.
 
 ## GPIO
 
@@ -53,7 +53,7 @@ The W5500 has the SPI bus to itself. The microSD card is on its own bus, the ESP
 | P06 | Motors-armed lamp (TBD62083 input 7) | out | Off (pull-down) |
 | P07 | Bleed stepper 24 V power switch | out | Off (pull-down) |
 | P10 | Bleed stepper enable (AM26C31 #1) | out | Disabled; polarity set at bring-up |
-| P11 | W5500 reset | out | Running (pull-up) |
+| P11 | WIZ850io reset | out | Running (pull-up) |
 | P12 | E-stop status | in | Opto input |
 | P13 | Bleed valve home switch | in | Opto input |
 | P14–P16 | Orifice selector bits 0–2 | in | Opto inputs |
@@ -69,7 +69,9 @@ The W5500 has the SPI bus to itself. The microSD card is on its own bus, the ESP
 | P03 | Lift actuator home switch | in | Opto input |
 | P04 | Lift actuator max-travel switch | in | Opto input |
 | P05 | Bleed stepper alarm | in | Opto input; reads active when the drive's alarm transistor turns on |
-| P06–P17 | Spare | — | 10 pins free. W5500 INT can go to one of these later if polling isn't enough |
+| P06 | WIZ850io interrupt | in | Only through solder jumper JP3; unused while the W5500 is polled |
+| P07 | Input eFuse fault | in | TPS2663 FLT on the power module, open drain, active low; 10 k pull-up |
+| P10–P17 | Spare | — | 8 pins free |
 
 ## I2C devices (I2C0, GPIO15/16)
 
