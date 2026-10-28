@@ -1,0 +1,9 @@
+# ESP32-S3-WROOM-2-N32R8V (32 MB flash). Two 6 MB OTA app slots, 8 MB SPIFFS.
+# About 12 MB above the SPIFFS partition is left free for a later data partition.
+# Name,   Type, SubType, Offset,   Size,     Flags
+nvs,      data, nvs,     0x9000,   0x5000,
+otadata,  data, ota,     0xe000,   0x2000,
+app0,     app,  ota_0,   0x10000,  0x600000,
+app1,     app,  ota_1,   0x610000, 0x600000,
+spiffs,   data, spiffs,  0xC10000, 0x800000,
+coredump, data, coredump,0x1410000,0x10000,

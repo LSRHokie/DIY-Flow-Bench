@@ -29,7 +29,7 @@
 #include "sensors.h"
 #include "messages.h"
 #include "driver/pcnt.h"
-#include "mafData.h"
+#include "mafdata.h"
 
 #define TINY_BME280_I2C
 #include "TinyBME280.h" 

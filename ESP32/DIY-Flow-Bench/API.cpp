@@ -21,7 +21,7 @@
 #include "structs.h"
 
 #include "API.h"
-#include <esp32/rom/crc.h> 
+#include <esp_rom_crc.h>  // chip-independent ROM CRC (ESP32 and ESP32-S3)
 #include <ArduinoJson.h>
 #include <FS.h>
 #include <SPIFFS.h>
@@ -48,11 +48,11 @@ API::API() {
  * @name CREATE CRC32 CHECKSUM
  * @brief Compute checksum using ESP32 ROM CRC library
  * @returns CRC32 hash derived from *str
- * @implements <esp32/rom/crc.h>
+ * @implements <esp_rom_crc.h>
  ***/
 uint32_t API::calcCRC (const char* str) {
 
-  CRC = (crc32_le(0, (const uint8_t*)str, 4));
+  CRC = (esp_rom_crc32_le(0, (const uint8_t*)str, 4));
 
   return CRC;
 }
