@@ -28,7 +28,7 @@ Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye
 
 1. **Pololu D24V22F5 / F12:** pinout confirmed from the board (PG, EN, VIN, GND, VOUT down one edge, plus a corner GND level with PG). Its footprint is `FlowBench:Pololu_D24V22Fx` in the project's own footprint library. The corner pad sits 0.4 in from the row, read from Pololu's photo: check it with a caliper before ordering boards.
 2. **ABP2 pinout and footprint:** from Honeywell's I2C table (1 VDD, 2 SCL, 3 EOC, 4 SDA, 5 GND, 6 NC). KiCad has no ABP2 footprint; one has to be drawn from the datasheet.
-3. **WIZ850io:** two 1 × 6 sockets (J1: GND, GND, MOSI, SCLK, SCNn, INTn; J2: GND, 3V3D, 3V3D, NC, RSTn, MISO). Take their spacing from WIZnet's mechanical drawing.
+3. **WIZ850io:** confirmed from the module (20 × 25 mm, two 1 × 6 headers). One part and one footprint, `FlowBench:WIZ850io`: J1 is pads 1–6, J2 is pads 7–12, rows 17.78 mm (0.7 in) apart, pin 1 nearest the RJ45. Place it with the jack facing the board edge.
 4. **DevKit sockets:** the pin-by-pin map follows `docs/V2/pin-map.md`. Take the row spacing from Espressif's drawing.
 5. **Custom symbols** drawn from datasheets: ADS1219 (TSSOP-16), AM26C31 (SOIC-16), TPS7A4901 (MSOP-8 PowerPAD). Worth one look each against the datasheet pin table.
 6. **Footprint names** follow KiCad's standard libraries. If KiCad flags one as missing when you update the PCB, it's a name to pick from your library, not a circuit problem. The microSD socket (Hirose DM3AT) and the TLP291-4 footprint are the likeliest.

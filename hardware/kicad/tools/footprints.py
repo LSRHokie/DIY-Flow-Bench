@@ -46,4 +46,36 @@ def pololu_d24v22fx():
     return '\n'.join(out) + '\n'
 
 
-ALL = {'Pololu_D24V22Fx': pololu_d24v22fx}
+def wiz850io():
+    """WIZnet WIZ850io (20 x 25 mm), plugged into two 1x6 female sockets.
+
+    J1 (GND, GND, MOSI, SCLK, SCNn, INTn) is pads 1-6 on the left; J2 (GND, 3V3D,
+    3V3D, NC, RSTn, MISO) is pads 7-12 on the right, 17.78 mm (0.7 in) across, both
+    with pin 1 nearest the RJ45 jack. Top view, jack toward the top (negative y):
+    place it with the jack facing the board edge. Module outline is approximate
+    (fab layer only); the jack's metal shell overhangs it slightly.
+    """
+    p, w = 2.54, 17.78
+    cx = w / 2
+    x0, x1, y0, y1 = cx - 10, cx + 10, -7.0, 18.0
+    out = ['(footprint "WIZ850io" (version 20221018) (generator kicadgen) (layer "F.Cu")',
+           '  (descr "WIZnet WIZ850io W5500 module, two 1x6 2.54 mm sockets 17.78 mm apart")',
+           '  (tags "WIZ850io W5500 Ethernet module")',
+           '  (attr through_hole)',
+           '  (fp_text reference "REF**" (at %g %g) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))' % (cx, y1 + 1.8),
+           '  (fp_text value "WIZ850io" (at %g %g) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))' % (cx, 6.35),
+           _rect(x0, y0, x1, y1, 'F.Fab', 0.1),
+           _rect(x0 - 0.2, y0 - 0.2, x1 + 0.2, y1 + 0.2, 'F.SilkS', 0.12),
+           _rect(x0 - 0.5, y0 - 1.5, x1 + 0.5, y1 + 0.5, 'F.CrtYd', 0.05),
+           '  (fp_text user "RJ45 this side" (at %g %g) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12))))' % (cx, y0 + 1.2),
+           '  (fp_text user "J1" (at -1.9 0) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12)) (justify right)))',
+           '  (fp_text user "J2" (at %g 0) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.12)) (justify left)))' % (w + 1.9)]
+    for i in range(6):
+        out.append(_pad(str(i + 1), 0, i * p, 'rect' if i == 0 else 'circle'))
+    for i in range(6):
+        out.append(_pad(str(i + 7), w, i * p, 'rect' if i == 0 else 'circle'))
+    out.append(')')
+    return '\n'.join(out) + '\n'
+
+
+ALL = {'Pololu_D24V22Fx': pololu_d24v22fx, 'WIZ850io': wiz850io}

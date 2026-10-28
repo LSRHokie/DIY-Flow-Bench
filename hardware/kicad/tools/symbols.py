@@ -124,12 +124,12 @@ def load(project, libdir):
     S['DevKitC-1_J3'] = project.sym(rect_symbol(
         'DevKitC-1_J3', 'J', left=[(str(i + 1), n) for i, n in enumerate(devkit_j3)], footprint=socket(22),
         description='ESP32-S3-DevKitC-1 header J3 (socket on the board)'))
-    S['WIZ850io_J1'] = project.sym(rect_symbol(   # WIZnet WIZ850io docs
-        'WIZ850io_J1', 'J', right=[('1', 'GND'), ('2', 'GND'), ('3', 'MOSI'), ('4', 'SCLK'), ('5', 'SCNn'),
-                                   ('6', 'INTn')], footprint=socket(6),
-        description='WIZ850io J1 (socket on the board)'))
-    S['WIZ850io_J2'] = project.sym(rect_symbol(
-        'WIZ850io_J2', 'J', right=[('1', 'GND'), ('2', '3V3D'), ('3', '3V3D'), ('4', 'NC'), ('5', 'RSTn'),
-                                   ('6', 'MISO')], footprint=socket(6),
-        description='WIZ850io J2 (socket on the board)'))
+    S['WIZ850io'] = project.sym(rect_symbol(   # WIZnet WIZ850io: J1 = pads 1-6, J2 = pads 7-12
+        'WIZ850io', 'U',
+        left=[('1', 'J1-1 GND', 'power_in'), ('2', 'J1-2 GND', 'power_in'), ('3', 'J1-3 MOSI', 'input'),
+              ('4', 'J1-4 SCLK', 'input'), ('5', 'J1-5 SCNn', 'input'), ('6', 'J1-6 INTn', 'open_collector')],
+        right=[('7', 'J2-1 GND', 'power_in'), ('8', 'J2-2 3V3D', 'power_in'), ('9', 'J2-3 3V3D', 'power_in'),
+               ('10', 'J2-4 NC', 'no_connect'), ('11', 'J2-5 RSTn', 'input'), ('12', 'J2-6 MISO', 'output')],
+        footprint='FlowBench:WIZ850io',
+        description='WIZnet WIZ850io W5500 Ethernet module on two 1x6 sockets, 17.78 mm apart'))
     return S

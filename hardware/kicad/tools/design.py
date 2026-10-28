@@ -136,11 +136,11 @@ def main_board(libdir):
 
     # ------------------------------------------------------------------ network and storage
     b.on(net)
-    net.note('WIZ850io: two 1x6 sockets. Check the J1-J2 spacing against the WIZnet mechanical drawing before layout.')
+    net.note('WIZ850io: one footprint with both 1x6 sockets (J1 = pads 1-6, J2 = pads 7-12), rows 17.78 mm (0.7 in) apart.')
     net.note('The W5500 is polled (no interrupt). JP3 routes INTn to expander 2 P06 if polling is not enough.')
     net.note('microSD on the ESP32-S3 SD host, 1-bit mode. JP1 can disconnect DAT0 from GPIO3 (a strapping pin) if it upsets boot.')
-    b.part('J', 'WIZ850io_J1', 'WIZ850io J1', {1: 'GND', 2: 'GND', 3: 'SPI_MOSI', 4: 'SPI_SCK', 5: 'ETH_CS', 6: 'ETH_INT_N'})
-    b.part('J', 'WIZ850io_J2', 'WIZ850io J2', {1: 'GND', 2: '+3V3', 3: '+3V3', 4: None, 5: 'ETH_RST_N', 6: 'SPI_MISO'})
+    b.part('U', 'WIZ850io', 'WIZ850io', {1: 'GND', 2: 'GND', 3: 'SPI_MOSI', 4: 'SPI_SCK', 5: 'ETH_CS', 6: 'ETH_INT_N',
+           7: 'GND', 8: '+3V3', 9: '+3V3', 10: None, 11: 'ETH_RST_N', 12: 'SPI_MISO'})
     b.R('10k', '+3V3', 'ETH_CS')
     b.R('10k', '+3V3', 'ETH_INT_N')
     b.R('10k', '+3V3', 'ETH_RST_N')
