@@ -77,6 +77,13 @@ The LED labels print on the silkscreen. The DevKit's own RGB LED (GPIO38) is fre
 | Analog | 2×5 header, GND row | ADC2_AIN2, ADC2_AIN3, MAF_SIG_ADC, MAF_ID_ADC, CT_BIAS |
 | Digimatic | 2×3 header, GND row | DIGI_CLK, DIGI_DATA, DIGI_REQ |
 
+### Prototyping area
+
+A 10 × 7 grid of 2.54 mm plated holes (`FlowBench:ProtoArea_10x7`) between the optocouplers and the I2C multiplexer:
+- Row 1 is a +3V3 rail, row 2 a +5V rail, rows 3–6 are free, and row 7 is a GND rail. Each rail's pads share one net: route each rail with a straight track. The GND row also connects to the bottom ground plane.
+- To its right: the **expander 2 spare** header (P10–P17, +3V3, GND) and a new **I2C expansion** header carrying multiplexer channels 4–7 (SDA/SCL pairs, each with its own 4.7 k pull-ups, plus +3V3 and GND).
+- No 24 V reaches the area.
+
 Fast lines (SPI, SD) have no test points: probe them at the WIZ850io and microSD pins, so no stubs are added.
 
 To run it:

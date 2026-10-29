@@ -194,18 +194,18 @@ def main_board(libdir):
     b.on(adc)
     adc.note('Main I2C bus: expanders 0x20/0x21, Digimatic ATtiny 0x30, ADS1219 #1 0x40, ADS1219 #2 0x41, TCA9548A 0x70.')
     adc.note('ADS1219 #2 moved from mux channel 4 to the main bus at 0x41: at 0x40 behind the mux it would clash with ADS1219 #1.')
-    adc.note('Behind the mux: ABP2 reference ch0, orifice ch1, pitot ch2 (all 0x28), BME280 cable ch3 (0x77). Ch4-7 spare.')
+    adc.note('Behind the mux: ABP2 reference ch0, orifice ch1, pitot ch2 (all 0x28), BME280 cable ch3 (0x77). Ch4-7 go to the prototyping area.')
     b.R('2.2k', '+3V3', 'SDA')
     b.R('2.2k', '+3V3', 'SCL')
     mux = {1: 'GND', 2: 'GND', 21: 'GND', 3: 'MUX_RST_N', 22: 'SCL', 23: 'SDA', 24: '+3V3', 12: 'GND'}
     for ch in range(8):
         sd, sc = 4 + 2 * ch + (1 if ch >= 4 else 0), 5 + 2 * ch + (1 if ch >= 4 else 0)
-        mux[sd] = 'MUX%d_SDA' % ch if ch < 4 else None
-        mux[sc] = 'MUX%d_SCL' % ch if ch < 4 else None
+        mux[sd] = 'MUX%d_SDA' % ch
+        mux[sc] = 'MUX%d_SCL' % ch
     b.part('U', 'TCA9548APWR', 'TCA9548APWR', mux)
     b.R('10k', '+3V3', 'MUX_RST_N')
     b.C('100nF', '+3V3')
-    for ch in range(4):
+    for ch in range(8):
         b.R('4.7k', '+3V3', 'MUX%d_SDA' % ch)
         b.R('4.7k', '+3V3', 'MUX%d_SCL' % ch)
     for ch, name in enumerate(['Reference', 'Orifice', 'Pitot']):
@@ -326,6 +326,12 @@ def main_board(libdir):
               'LIFT_MAX_N', 'BLEED_ALM_N', 'EFUSE_FLT_N', 'ETH_INT_EXP']:
         b.R('10k', '+3V3', n)
     b.CONN(10, 'Expander 2 spare', ['EXP2_P1%d' % i for i in range(8)] + ['+3V3', 'GND'], header(10))
+    # prototyping area: plated-hole grid with +3V3, +5V and GND rails, beside the spare-expander
+    # header and the I2C expansion header (mux channels 4-7, each with its own 4.7k pull-ups)
+    io.note('Prototyping area: 10 x 7 plated holes (+3V3 row, +5V row, 4 free rows, GND row); spare expander and I2C ch4-7 headers beside it. No 24 V.')
+    b.part('PROTO', 'ProtoArea', 'Prototyping area', {1: '+3V3', 2: '+5V', 3: 'GND'})
+    b.CONN(10, 'I2C expansion (mux ch4-7)', ['MUX4_SDA', 'MUX4_SCL', 'MUX5_SDA', 'MUX5_SCL', 'MUX6_SDA', 'MUX6_SCL',
+           'MUX7_SDA', 'MUX7_SCL', '+3V3', 'GND'], header(10))
     # opto inputs. TLP291-4 unit: anode, cathode, emitter, collector
     units = [(1, 2, 15, 16), (3, 4, 13, 14), (5, 6, 11, 12), (7, 8, 9, 10)]
     field24 = [('ESTOP_STAT_IN', 'ESTOP_OK_N'), ('BLEED_HOME_IN', 'BLEED_HOME_N'), ('LIFT_HOME_IN', 'LIFT_HOME_N'),

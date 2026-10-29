@@ -45,6 +45,6 @@
   (property "Sheetfile" "io.kicad_sch" (at 88.9 81.98 0) (effects (font (size 1.27 1.27)) (justify left top)))
   (instances (project "flowbench-main" (path "/3fb61d9c-3b1e-5fb0-b170-9571a3950aeb" (page "7"))))
 )
-(text "DIY Flow Bench V2 main board, rev A" (at 25.4 25.4 0) (effects (font (size 2.54 2.54)) (justify left bottom)) (uuid 8c926c4e-b3f2-493c-844d-7cd60e3d5d5e))
+(text "DIY Flow Bench V2 main board, rev A" (at 25.4 25.4 0) (effects (font (size 2.54 2.54)) (justify left bottom)) (uuid 631d2947-a802-4526-9bd9-8bd0ad4ce3a1))
 (sheet_instances (path "/" (page "1")))
 )

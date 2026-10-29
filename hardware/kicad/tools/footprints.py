@@ -140,5 +140,34 @@ def abp2_dip():
     return '\n'.join(out) + '\n'
 
 
+def proto_area(cols=10, rows=7):
+    """Prototyping grid: 2.54 mm plated holes. Row 0 = +3V3 rail (pads "1"), row 1 = +5V rail
+    (pads "2"), rows 2..rows-2 free (unconnected), last row = GND rail (pads "3"). Rail pads
+    share a number, so KiCad shows them as one net: route each rail with a straight track
+    (the GND row also picks up the bottom ground plane).
+    """
+    p = 2.54
+    w, h = (cols - 1) * p, (rows - 1) * p
+    out = ['(footprint "ProtoArea_%dx%d" (version 20221018) (generator kicadgen) (layer "F.Cu")' % (cols, rows),
+           '  (descr "Prototyping grid %dx%d, 2.54 mm, +3V3 / +5V / GND rails")' % (cols, rows),
+           '  (tags "prototype grid perfboard")',
+           '  (attr through_hole)',
+           '  (fp_text reference "REF**" (at %g %g) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))' % (w / 2, h + 2.5),
+           '  (fp_text value "PROTO" (at %g -2.6) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))' % (w / 2),
+           _rect(-1.5, -1.5, w + 1.5, h + 1.5, 'F.SilkS', 0.12),
+           _rect(-1.8, -1.8, w + 1.8, h + 1.8, 'F.CrtYd', 0.05),
+           _rect(-1.3, -1.3, w + 1.3, h + 1.3, 'F.Fab', 0.1)]
+    for txt, row in (('3V3', 0), ('5V', 1), ('GND', rows - 1)):
+        out.append('  (fp_text user "%s" (at %g %g) (layer "F.SilkS") (effects (font (size 0.7 0.7) (thickness 0.1)) (justify right)))'
+                   % (txt, -1.9, row * p))
+    for r in range(rows):
+        num = '1' if r == 0 else '2' if r == 1 else '3' if r == rows - 1 else ''
+        for c in range(cols):
+            out.append('  (pad "%s" thru_hole circle (at %g %g) (size 1.6 1.6) (drill 1.0) (layers "*.Cu" "*.Mask"))'
+                       % (num, c * p, r * p))
+    out.append(')')
+    return '\n'.join(out) + '\n'
+
+
 ALL = {'Pololu_D24V22Fx': pololu_d24v22fx, 'WIZ850io': wiz850io, 'ESP32-S3-DevKitC-1': devkitc1,
-       'Honeywell_ABP2_DIP': abp2_dip}
+       'Honeywell_ABP2_DIP': abp2_dip, 'ProtoArea_10x7': proto_area}
