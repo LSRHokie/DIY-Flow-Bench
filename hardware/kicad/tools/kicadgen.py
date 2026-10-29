@@ -23,6 +23,14 @@ def U():
     return str(uuidlib.uuid4())
 
 
+NS = uuidlib.UUID('6f1c2b7e-3d4a-4e5f-9a8b-0c1d2e3f4a5b')
+
+
+def SU(key):
+    """Stable UUID from a key, so regenerating keeps the schematic-to-PCB links."""
+    return str(uuidlib.uuid5(NS, key))
+
+
 def q(s):
     return '"' + str(s).replace('\\', '\\\\').replace('"', '\\"') + '"'
 
@@ -374,6 +382,11 @@ class Project:
     # ---- writing
     def write(self, outdir):
         os.makedirs(outdir, exist_ok=True)
+        # stable ids: root, sheets and symbols keep the same UUIDs from run to run
+        self.root_uuid = SU(self.name + '/root')
+        for sh in self.sheets:
+            sh.uuid = SU(self.name + '/sheet/' + sh.filename)
+            sh.file_uuid = SU(self.name + '/file/' + sh.filename)
         nets = self.netlist()
         net_sheets = {}
         for n, members in nets.items():
@@ -443,6 +456,25 @@ class Project:
                "schematic": {"legacy_lib_dir": "", "legacy_lib_list": []},
                "boards": [], "libraries": {"pinned_footprint_libs": [], "pinned_symbol_libs": []},
                "text_variables": {}}
+        classes = getattr(self, 'netclasses', None)
+        if classes:
+            def nc(name, track, clearance, via=0.6, drill=0.3):
+                return {"name": name, "clearance": clearance, "track_width": track, "via_diameter": via,
+                        "via_drill": drill, "diff_pair_width": 0.2, "diff_pair_gap": 0.25, "diff_pair_via_gap": 0.25,
+                        "microvia_diameter": 0.3, "microvia_drill": 0.1, "bus_width": 12, "wire_width": 6,
+                        "line_style": 0, "pcb_color": "rgba(0, 0, 0, 0.000)", "schematic_color": "rgba(0, 0, 0, 0.000)"}
+            known = set(self.netlist())
+            patterns = []
+            for c in classes:
+                for n in c['nets']:
+                    if n not in known:
+                        raise ValueError('net class %s names unknown net %s' % (c['name'], n))
+                    patterns.append({"netclass": c['name'], "pattern": n})
+            pro["net_settings"] = {
+                "meta": {"version": 3},
+                "classes": [nc('Default', 0.25, 0.2)] + [nc(c['name'], c['track'], c['clearance'], c['via'], c['drill'])
+                                                        for c in classes],
+                "net_colors": None, "netclass_assignments": None, "netclass_patterns": patterns}
         open(os.path.join(outdir, self.name + '.kicad_pro'), 'w').write(json.dumps(pro, indent=2) + '\n')
 
     def _write_sheet(self, outdir, sh, page):
@@ -529,7 +561,7 @@ class Project:
                 props.append((k, v, ox, oy, True))
         lines = ['(symbol (lib_id %s) (at %s %s 0) (unit %d)' % (q(self.libname + ':' + sym.name), f(ox), f(oy), unit),
                  '  (in_bom %s) (on_board yes) (dnp %s)' % ('no' if sym.power else 'yes', 'yes' if part.dnp else 'no'),
-                 '  (uuid %s)' % U()]
+                 '  (uuid %s)' % SU('%s/%s/%s/%d' % (self.name, path, part.ref, unit))]
         for k, v, x, y, hide in props:
             lines.append('  (property %s %s (at %s %s 0) (effects (font (size 1.27 1.27)) (justify left)%s))'
                          % (q(k), q(v), f(x), f(y), ' hide' if hide else ''))

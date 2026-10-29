@@ -5,31 +5,31 @@
   },
   "sheets": [
     [
-      "6f997f2c-65b5-4504-996b-548df9139c9f",
+      "3fb61d9c-3b1e-5fb0-b170-9571a3950aeb",
       ""
     ],
     [
-      "44f71a1d-1f5e-407c-b284-885994c97603",
+      "13b9fd21-0441-56ec-9772-5f171f736985",
       "Power"
     ],
     [
-      "2fb461a2-b626-4770-a3fb-8c80d6004ba4",
+      "1b2d187d-5e20-55f3-beae-2e3f033382ae",
       "Controller"
     ],
     [
-      "4ddd60d9-12d1-403d-9148-aa71dff8681a",
+      "a7aa0f33-f623-56f8-8632-2f49b432629f",
       "Network and storage"
     ],
     [
-      "6a62dbd3-2143-47bf-9aea-bfe7502e3b0b",
+      "04229fb8-870e-5f63-9b4c-c2fd5f468a31",
       "Sensors and ADC"
     ],
     [
-      "695ed618-7eda-49a0-8dfa-11903d2d7fd8",
+      "677cc651-a8b7-5bd2-be3e-85056a94ddea",
       "Field inputs"
     ],
     [
-      "f8021bb1-4a4b-4cd2-9b24-6144e0cd682e",
+      "42911a1b-4496-517d-b78e-699c129c9799",
       "IO and safety"
     ]
   ],
@@ -42,5 +42,251 @@
     "pinned_footprint_libs": [],
     "pinned_symbol_libs": []
   },
-  "text_variables": {}
+  "text_variables": {},
+  "net_settings": {
+    "meta": {
+      "version": 3
+    },
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.2,
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Power24",
+        "clearance": 0.3,
+        "track_width": 2.5,
+        "via_diameter": 1.0,
+        "via_drill": 0.5,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Stepper24",
+        "clearance": 0.3,
+        "track_width": 1.2,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Coil24",
+        "clearance": 0.3,
+        "track_width": 0.8,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Supply",
+        "clearance": 0.2,
+        "track_width": 0.8,
+        "via_diameter": 0.8,
+        "via_drill": 0.4,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Rail",
+        "clearance": 0.2,
+        "track_width": 0.5,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      },
+      {
+        "name": "Field24",
+        "clearance": 0.3,
+        "track_width": 0.4,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "bus_width": 12,
+        "wire_width": 6,
+        "line_style": 0,
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "schematic_color": "rgba(0, 0, 0, 0.000)"
+      }
+    ],
+    "net_colors": null,
+    "netclass_assignments": null,
+    "netclass_patterns": [
+      {
+        "netclass": "Power24",
+        "pattern": "+24V_RAW"
+      },
+      {
+        "netclass": "Power24",
+        "pattern": "+24V"
+      },
+      {
+        "netclass": "Stepper24",
+        "pattern": "BLEED_24V"
+      },
+      {
+        "netclass": "Stepper24",
+        "pattern": "BLEED_24V_F"
+      },
+      {
+        "netclass": "Stepper24",
+        "pattern": "LIFT_24V"
+      },
+      {
+        "netclass": "Stepper24",
+        "pattern": "LIFT_24V_F"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL_24V"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL_24V_ESTOP"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL1_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL2_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL3_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL4_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL5_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "COIL6_RET"
+      },
+      {
+        "netclass": "Coil24",
+        "pattern": "LAMP_RET"
+      },
+      {
+        "netclass": "Supply",
+        "pattern": "+5V"
+      },
+      {
+        "netclass": "Supply",
+        "pattern": "+12V"
+      },
+      {
+        "netclass": "Supply",
+        "pattern": "GND"
+      },
+      {
+        "netclass": "Supply",
+        "pattern": "MAF_12V"
+      },
+      {
+        "netclass": "Rail",
+        "pattern": "+3V3"
+      },
+      {
+        "netclass": "Rail",
+        "pattern": "+5VA"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "+24V_FIELD"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "ESTOP_STAT_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "BLEED_HOME_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "LIFT_HOME_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "LIFT_MAX_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "ORIF_B0_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "ORIF_B1_IN"
+      },
+      {
+        "netclass": "Field24",
+        "pattern": "ORIF_B2_IN"
+      }
+    ]
+  }
 }

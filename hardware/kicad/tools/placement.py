@@ -2,74 +2,86 @@
 the main board for rev A: outline, mounting holes, edge connectors, ICs and modules
 at planned spots, and every passive packed next to the part it serves.
 
-Board: 220 x 160 mm, origin at the top-left corner, y down (KiCad convention).
-  Top edge:    24 V input, stepper power and signals, coils, lamp, E-stop
-  Bottom edge: MAF, current sensors, swirl, Digimatic, BME280, switches, orifice
-  Left edge:   DevKit antenna overhangs it
-  Right edge:  WIZ850io RJ45 faces it; ABP2 ports face it
+Board: 180 x 125 mm, origin at the top-left corner, y down (KiCad convention).
+  Top edge:    24 V input, stepper power and signals, coils
+  Right edge:  lamp, E-stop; WIZ850io RJ45 and ABP2 ports face it
+  Bottom edge: MAF, current sensors, swirl, Digimatic, BME280, bleed home switch
+  Left edge:   orifice selector, lift switches; DevKit antenna overhangs it
 """
 import json
 import re
 
-W, H = 220.0, 160.0
+W, H = 180.0, 125.0
 POWER_NETS = {'GND', '+3V3', '+5V', '+12V', '+24V', '+24V_RAW', '+5VA', '+24V_FIELD', 'SDA', 'SCL'}
+DEVKIT_PIN1 = (6, 88)          # DevKit rotated 90: antenna band at the left edge, y about 61 to 90
 
-# value (or Function field) -> (x, y, rotation, edge). For edge connectors x is the left
-# end of the connector and y is ignored: the script pushes it against the edge.
+# value (or Function field) -> (x, y, rotation, edge). For edge connectors the script pushes
+# the part against that edge with its plug facing out; x (top/bottom) or y (left/right) is
+# where the connector starts along the edge, and the other coordinate is ignored.
 PLAN = [
-    # top edge
-    ('24V IN', 14, 0, 0, 'top'),
-    ('Bleed stepper 24 V (GX12-2)', 32, 0, 0, 'top'),
-    ('Lift stepper 24 V (GX12-2)', 50, 0, 0, 'top'),
-    ('Bleed stepper signals (GX16-8)', 68, 0, 0, 'top'),
-    ('Lift stepper signals (GX16-8)', 104, 0, 0, 'top'),
-    ('Motor housing coils (GX16-8)', 140, 0, 0, 'top'),
-    ('Motors-armed lamp', 176, 0, 0, 'top'),
-    ('E-stop (2 NC contacts)', 188, 0, 0, 'top'),
-    # bottom edge
-    ('MAF (GX12-7)', 14, 0, 0, 'bottom'),
-    ('Motor current sensors (GX16-8)', 44, 0, 0, 'bottom'),
-    ('Swirl encoder (GX12-5)', 78, 0, 0, 'bottom'),
-    ('Digimatic indicator (GX12-4)', 100, 0, 0, 'bottom'),
-    ('BME280 (GX12-4)', 118, 0, 0, 'bottom'),
-    ('Bleed home switch (GX12-3)', 136, 0, 0, 'bottom'),
-    ('Lift switches (GX12-4)', 150, 0, 0, 'bottom'),
-    ('Orifice selector (GX12-5)', 168, 0, 0, 'bottom'),
+    # top edge: 24 V and actuators
+    ('24V IN', 13, 0, 0, 'top'),
+    ('Bleed stepper 24 V (GX12-2)', 27, 0, 0, 'top'),
+    ('Lift stepper 24 V (GX12-2)', 41, 0, 0, 'top'),
+    ('Bleed stepper signals (GX16-8)', 55, 0, 0, 'top'),
+    ('Lift stepper signals (GX16-8)', 90, 0, 0, 'top'),
+    ('Motor housing coils (GX16-8)', 125, 0, 0, 'top'),
+    # right edge: lamp and E-stop above the RJ45 and pressure ports
+    ('Motors-armed lamp', 0, 13, 90, 'right'),
+    ('E-stop (2 NC contacts)', 0, 26, 90, 'right'),
+    # left edge: switch inputs above the DevKit antenna
+    ('Orifice selector (GX12-5)', 0, 13, 90, 'left'),
+    ('Lift switches (GX12-4)', 0, 37, 90, 'left'),
+    # bottom edge: sensors
+    ('MAF (GX12-7)', 13, 0, 0, 'bottom'),
+    ('Motor current sensors (GX16-8)', 45, 0, 0, 'bottom'),
+    ('Swirl encoder (GX12-5)', 80, 0, 0, 'bottom'),
+    ('Digimatic indicator (GX12-4)', 104, 0, 0, 'bottom'),
+    ('BME280 (GX12-4)', 124, 0, 0, 'bottom'),
+    ('Bleed home switch (GX12-3)', 144, 0, 0, 'bottom'),
     # power block (top left); PM1 plugs in above its sockets
-    ('PM1 power socket', 10, 24, 90, None),
-    ('PM1 signal socket', 10, 46, 90, None),
-    ('D24V22F5 (5 V 2.5 A)', 52, 22, 0, None),
-    ('D24V22F12 (12 V 2.2 A)', 52, 44, 0, None),
-    ('LM1117-3.3', 34, 60, 0, None),
-    # stepper drivers, coil driver and watchdog (under the top connectors)
-    ('AM26C31 (bleed stepper)', 82, 30, 0, None),
-    ('AM26C31 (lift stepper)', 116, 30, 0, None),
-    ('TBD62083AFWG', 152, 30, 0, None),
-    ('74HCT123', 188, 32, 0, None),
-    # controller: pin 1 at the left, antenna overhanging the left edge
-    ('ESP32-S3-DevKitC-1-N32R8V', 6, 98, 90, None),
-    ('microSD push-push', 72, 104, 0, None),
-    # Ethernet: RJ45 toward the right edge
-    ('WIZ850io', 205, 56, 270, None),
-    # expanders and optocouplers (middle)
-    ('TCA9535PWR #1 (0x20)', 92, 62, 0, None),
-    ('TCA9535PWR #2 (0x21)', 124, 62, 0, None),
-    ('Expander 2 spare', 146, 50, 90, None),
-    ('TLP291-4#1', 88, 86, 0, None),
-    ('TLP291-4#2', 108, 86, 0, None),
-    ('TLP291-4#3', 128, 86, 0, None),
+    ('PM1 power socket', 13, 17, 90, None),
+    ('PM1 signal socket', 13, 31, 90, None),
+    ('D24V22F5 (5 V 2.5 A)', 48, 15, 0, None),
+    ('D24V22F12 (12 V 2.2 A)', 70, 15, 0, None),
+    ('LM1117-3.3', 32, 42, 0, None),
+    # stepper drivers, coil driver, watchdog (under the top connectors)
+    ('AM26C31 (bleed stepper)', 99, 26, 0, None),
+    ('AM26C31 (lift stepper)', 116, 26, 0, None),
+    ('TBD62083AFWG', 136, 27, 0, None),
+    ('74HCT123', 157, 26, 0, None),
+    # controller and storage
+    ('ESP32-S3-DevKitC-1-N32R8V', DEVKIT_PIN1[0], DEVKIT_PIN1[1], 90, None),
+    ('microSD push-push', 70, 85, 0, None),
+    ('WIZ850io', 167, 46, 270, None),
+    # expanders and optocouplers
+    ('TCA9535PWR #1 (0x20)', 80, 48, 0, None),
+    ('TCA9535PWR #2 (0x21)', 102, 48, 0, None),
+    ('TLP291-4#1', 76, 68, 0, None),
+    ('TLP291-4#2', 94, 68, 0, None),
+    ('TLP291-4#3', 112, 68, 0, None),
     # I2C mux and pressure sensors (ports toward the right edge)
-    ('TCA9548APWR', 154, 74, 0, None),
-    ('Reference pressure', 178, 92, 0, None),
-    ('Orifice pressure', 178, 110, 0, None),
-    ('Pitot pressure', 178, 128, 0, None),
+    ('TCA9548APWR', 132, 70, 0, None),
+    ('Reference pressure', 150, 70, 0, None),
+    ('Orifice pressure', 150, 84, 0, None),
+    ('Pitot pressure', 150, 98, 0, None),
     # analog and field interfaces (above the bottom connectors)
-    ('ADS1219 #1 (0x40)', 24, 118, 0, None),
-    ('ADS1219 #2 (0x41)', 52, 118, 0, None),
-    ('MCP6002', 60, 136, 0, None),
-    ('74LVC14 (5 V-tolerant inputs)', 86, 124, 0, None),
-    ('ATtiny1616-SN', 110, 120, 0, None),
-    ('UPDI', 128, 134, 90, None),
+    ('ADS1219 #1 (0x40)', 18, 100, 0, None),
+    ('ADS1219 #2 (0x41)', 36, 100, 0, None),
+    ('MCP6002', 53, 102, 0, None),
+    ('74LVC14 (5 V-tolerant inputs)', 92, 99, 0, None),
+    ('ATtiny1616-SN', 113, 99, 0, None),
+    ('UPDI', 129, 103, 90, None),
+    # test-point areas, grouped by purpose and voltage
+    ('+24V_RAW', 116, 43, 0, None), ('+24V', 122.35, 43, 0, None), ('BLEED_24V_F', 128.7, 43, 0, None),
+    ('LIFT_24V_F', 135.05, 43, 0, None), ('COIL_24V_ESTOP', 141.4, 43, 0, None), ('+24V_FIELD', 147.75, 43, 0, None),
+    ('GND#1', 147.75, 49.35, 0, None),
+    ('+12V', 15, 56, 0, None), ('+5V', 20.08, 56, 0, None), ('+5VA', 25.16, 56, 0, None), ('+3V3', 30.24, 56, 0, None),
+    ('GND#2', 35.32, 56, 0, None),
+    ('Controller test header', 41, 57, 90, None),
+    ('Analog test header', 58, 104, 90, None),
+    ('Digimatic test header', 106, 111, 90, None),
+    ('Expander 2 spare', 76, 111, 90, None),
     # mounting holes
     ('M3 mounting hole#1', 5, 5, 0, None),
     ('M3 mounting hole#2', W - 5, 5, 0, None),
@@ -94,7 +106,10 @@ def build(project):
             raise KeyError('placement plan names a part that does not exist: %s' % key)
         anchors[keyed[key].ref] = [x, y, rot, edge]
     anchor_parts = {p.ref: p for _, p in parts if p.ref in anchors}
-    unplaced = [p.ref for _, p in parts if not re.match(r'^(R|C|D|Q|F|JP|TP)\d', p.ref) and p.ref not in anchors]
+    unplaced = [p.ref for _, p in parts if not re.match(r'^(R|C|D|Q|F|JP|TP|LED)\d', p.ref) and p.ref not in anchors]
+    unplanned_tp = [p.ref for _, p in parts if p.ref.startswith('TP') and p.ref not in anchors]
+    if unplanned_tp:
+        raise KeyError('test points without a planned spot: %s' % unplanned_tp)
     if unplaced:
         raise KeyError('no placement planned for %s' % unplaced)
 
@@ -144,7 +159,7 @@ Run in KiCad's PCB editor after Update PCB from Schematic:
     Tools -> Scripting Console, then
     exec(open(r"<path to this file>").read())
 
-It draws the 220 x 160 mm outline (only if the board has none), puts the edge
+It draws the 180 x 125 mm outline (only if the board has none), puts the edge
 connectors against the edges with their plugs facing out, places ICs and modules at
 planned spots, and packs every resistor, capacitor and small part next to the part
 it connects to, at least 1 mm apart. Nothing is routed. Run it once on a fresh board;
@@ -155,8 +170,10 @@ import pcbnew
 W, H = %(W)s, %(H)s
 ANCHORS = %(anchors)s
 PASSIVES = %(passives)s
-GAP = 1.0        # mm between part outlines
+ANTENNA = (%(ant_y0)s, %(ant_y1)s, 5.0)   # y from, y to, x to: DevKit antenna band at the left edge
+GAP = 1.0        # mm between part outlines, for hand soldering
 MARGIN = 2.0     # mm from the board edge
+HOLE_KEEP = 3.0  # extra mm kept clear around mounting holes (screw heads, standoffs)
 
 B = pcbnew.GetBoard()
 mm, tomm = pcbnew.FromMM, pcbnew.ToMM
@@ -228,15 +245,20 @@ for ref, (x, y, rot, edge) in ANCHORS.items():
     if edge:
         # the connector body (plug side) must face the edge: compare body centre with pad centre
         b = bbox(fp)
-        cy = (b[1] + b[3]) / 2
+        cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
         px, py = pad_centre(fp)
-        if (edge == 'top' and cy > py) or (edge == 'bottom' and cy < py):
+        if {'top': cy > py, 'bottom': cy < py, 'left': cx > px, 'right': cx < px}[edge]:
             fp.SetOrientationDegrees(rot + 180)
         b = bbox(fp)
-        dx = x - b[0]
-        dy = (0.5 - b[1]) if edge == 'top' else (H - 0.5 - b[3])
+        if edge in ('top', 'bottom'):
+            dx, dy = x - b[0], (0.5 - b[1]) if edge == 'top' else (H - 0.5 - b[3])
+        else:
+            dx, dy = (0.5 - b[0]) if edge == 'left' else (W - 0.5 - b[2]), y - b[1]
         shift(fp, dx, dy)
-    placed.append(bbox(fp))
+    b = bbox(fp)
+    if ref.startswith('H'):
+        b = [b[0] - HOLE_KEEP, b[1] - HOLE_KEEP, b[2] + HOLE_KEEP, b[3] + HOLE_KEEP]
+    placed.append(b)
 
 # passives: nearest free spot around their anchor, spiralling outward
 for ref, anchor in PASSIVES:
@@ -277,8 +299,53 @@ for ref, anchor in PASSIVES:
     if not done:
         missing.append(ref + ' (no room)')
 
+# part values to the fabrication layer: they stay visible in KiCad but don't print.
+# LEDs, test points and test headers keep theirs on the silkscreen: it's their label.
+for fp in B.GetFootprints():
+    if fp.GetReference().startswith(('LED', 'TP')) or 'test header' in fp.GetValue():
+        continue
+    try:
+        fp.Value().SetLayer(pcbnew.F_Fab)
+    except Exception:
+        pass
+
+# ground plane on the bottom layer, with a notch under the DevKit antenna, plus an
+# antenna keepout on both layers so no track or pour goes under it
+def poly_zone(name, layer, pts, net=None, rule_area=False):
+    z = pcbnew.ZONE(B)
+    z.SetLayer(layer)
+    ol = z.Outline()
+    ol.NewOutline()
+    for x, y in pts:
+        ol.Append(mm(x), mm(y))
+    z.SetZoneName(name)
+    if rule_area:
+        z.SetIsRuleArea(True)
+        z.SetDoNotAllowCopperPour(True)
+        z.SetDoNotAllowTracks(True)
+        z.SetDoNotAllowVias(True)
+    elif net is not None:
+        z.SetNet(net)
+    B.Add(z)
+    return z
+
+zones_note = ''
+try:
+    for z in list(B.Zones()):
+        if z.GetZoneName() in ('GND plane', 'Antenna keepout'):
+            B.Remove(z)
+    ay0, ay1, ax1 = ANTENNA
+    gnd = B.FindNet('GND')
+    poly_zone('GND plane', pcbnew.B_Cu, [(0, 0), (W, 0), (W, H), (0, H), (0, ay1), (ax1, ay1), (ax1, ay0), (0, ay0)], gnd)
+    for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
+        poly_zone('Antenna keepout', layer, [(0, ay0), (ax1, ay0), (ax1, ay1), (0, ay1)], rule_area=True)
+    pcbnew.ZONE_FILLER(B).Fill(B.Zones())
+    zones_note = ' Ground plane added on B.Cu and filled.'
+except Exception as e:
+    zones_note = ' Ground plane not added (%%s): add a GND zone on B.Cu by hand.' %% e
+
 pcbnew.Refresh()
-print('Placed %%d anchors and %%d passives.' %% (len(ANCHORS), len(PASSIVES)))
+print('Placed %%d anchors and %%d passives.%%s' %% (len(ANCHORS), len(PASSIVES), zones_note))
 if missing:
     print('Not placed:', ', '.join(missing))
 '''
@@ -287,6 +354,6 @@ if missing:
 def write(project, path):
     anchors, passives = build(project)
     with open(path, 'w') as fh:
-        fh.write(SCRIPT % {'W': W, 'H': H, 'anchors': json.dumps(anchors, indent=1).replace('null', 'None'),
+        fh.write(SCRIPT % {'W': W, 'H': H, 'ant_y0': DEVKIT_PIN1[1] - 28.2, 'ant_y1': DEVKIT_PIN1[1] + 2.8, 'anchors': json.dumps(anchors, indent=1).replace('null', 'None'),
                            'passives': json.dumps(passives)})
     return anchors, passives

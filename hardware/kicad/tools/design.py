@@ -48,6 +48,22 @@ class Builder:
     def TP(self, net):
         return self.part('TP', 'TestPoint', net, {1: net}, footprint=FP['TP'])
 
+    def LED(self, label, anode, cathode, color='green', r=None, supply=None):
+        """Status LED (0805). With r and supply: supply -> r -> LED -> cathode."""
+        if r:
+            self.R(r, supply, anode)
+        return self.part('LED', 'LED', label, {2: anode, 1: cathode}, footprint=FP['LED'],
+                         fields={'Color': color})
+
+    def HDR(self, value, signals):
+        """2-row test header: signals on odd pins, GND on every even pin (logic analyzer friendly)."""
+        nets = {}
+        for i, n in enumerate(signals):
+            nets[2 * i + 1], nets[2 * i + 2] = n, 'GND'
+        k = len(signals)
+        return self.part('J', 'Conn_02x%02d_Odd_Even' % k, value, nets,
+                         footprint='Connector_PinHeader_2.54mm:PinHeader_2x%02d_P2.54mm_Vertical' % k)
+
     def FLAG(self, net):
         return self.part('#FLG', 'PWR_FLAG', 'PWR_FLAG', {1: net}, footprint='')
 
@@ -113,7 +129,19 @@ def main_board(libdir):
     # PWR_FLAG only where no regulator output already drives the net (+5V, +12V, +3V3 have one)
     for n in ['+24V_RAW', '+24V', '+5VA', 'GND']:
         b.FLAG(n)
-    for n in ['+24V', '+12V', '+5V', '+3V3', '+5VA', 'GND']:
+    # status LEDs, about 2 mA each
+    b.LED('+24V', 'LED_24V_A', 'GND', r='10k', supply='+24V')
+    b.LED('+12V', 'LED_12V_A', 'GND', r='4.7k', supply='+12V')
+    b.LED('+5V', 'LED_5V_A', 'GND', r='1.5k', supply='+5V')
+    b.LED('+3V3', 'LED_3V3_A', 'GND', r='680R', supply='+3V3')
+    b.LED('EFUSE FLT', 'LED_FLT_A', 'EFUSE_FLT_N', color='red', r='1k', supply='+3V3')   # FLT sinks it
+    b.LED('BLEED PWR', 'LED_BLEEDPWR_A', 'GND', color='yellow', r='10k', supply='BLEED_24V_F')
+    b.LED('LIFT PWR', 'LED_LIFTPWR_A', 'GND', color='yellow', r='10k', supply='LIFT_24V_F')
+    # test-point areas, grouped by voltage: 24 V loops, then logic-supply loops (clip-lead friendly)
+    pw.note('Test points: 24 V area (supply, stepper and coil feeds) kept apart from the logic-supply area.')
+    for n in ['+24V_RAW', '+24V', 'BLEED_24V_F', 'LIFT_24V_F', 'COIL_24V_ESTOP', '+24V_FIELD', 'GND']:
+        b.TP(n)
+    for n in ['+12V', '+5V', '+5VA', '+3V3', 'GND']:
         b.TP(n)
     for _ in range(4):
         b.part('H', 'MountingHole', 'M3 mounting hole', {}, footprint='MountingHole:MountingHole_3.2mm_M3')
@@ -135,8 +163,8 @@ def main_board(libdir):
     b.R('10k', 'HEARTBEAT', 'GND')     # GPIO46 strapping: held low at boot
     b.R('10k', 'BLEED_STEP', 'GND')
     b.R('10k', 'LIFT_STEP', 'GND')
-    for n in ['ESP_RST', 'ESP_TX', 'ESP_RX', 'SDA', 'SCL', 'HEARTBEAT']:
-        b.TP(n)
+    mcu.note('Controller test header (2x8): signals on odd pins, GND on every even pin.')
+    b.HDR('Controller test header', ['ESP_RST', 'ESP_TX', 'ESP_RX', 'SDA', 'SCL', 'HEARTBEAT', 'WD_OK', 'EXP_INT_N'])
 
     # ------------------------------------------------------------------ network and storage
     b.on(net)
@@ -160,8 +188,7 @@ def main_board(libdir):
     b.part('JP', 'SolderJumper_2_Bridged', 'JP1 SD DAT0', {1: 'SD_DAT0_MCU', 2: 'SD_DAT0'}, footprint=FP['JP2B'])
     b.C('10uF', '+3V3', fp=FP['C1206'])
     b.C('100nF', '+3V3')
-    for n in ['SPI_SCK', 'SD_CLK', 'SD_CMD', 'SD_DAT0']:
-        b.TP(n)
+    net.note('Fast lines (SPI, SD) have no test points: probe them at the WIZ850io and microSD pins.')
 
     # ------------------------------------------------------------------ sensors and ADC
     b.on(adc)
@@ -203,8 +230,8 @@ def main_board(libdir):
     b.R('10k', 'MON_5VA', 'GND')
     b.C('100nF', 'MON_5VA')
     b.C('10nF', 'EFUSE_IMON')
-    b.TP('ADC2_AIN2')
-    b.TP('ADC2_AIN3')
+    adc.note('Analog test header (2x5): ADC2 spare inputs AIN2/AIN3, MAF signal and harness ID at the ADC, current-sensor bias.')
+    b.HDR('Analog test header', ['ADC2_AIN2', 'ADC2_AIN3', 'MAF_SIG_ADC', 'MAF_ID_ADC', 'CT_BIAS'])
 
     # ------------------------------------------------------------------ field inputs
     b.on(fld)
@@ -273,8 +300,7 @@ def main_board(libdir):
            9: None, 12: None, 13: None, 14: None, 15: None, 17: None, 18: None, 19: None})
     b.C('100nF', '+3V3')
     b.CONN(3, 'UPDI', ['DIGI_UPDI', '+3V3', 'GND'], header(3))
-    for n in ['DIGI_CLK', 'DIGI_DATA', 'DIGI_REQ']:
-        b.TP(n)
+    b.HDR('Digimatic test header', ['DIGI_CLK', 'DIGI_DATA', 'DIGI_REQ'])
 
     # ------------------------------------------------------------------ I/O and safety
     b.on(io)
@@ -307,11 +333,16 @@ def main_board(libdir):
                ('ORIF_B2_IN', 'ORIF_B2_N')]
     alarms = [('BLEED', 'BLEED_ALM_N'), ('LIFT', 'LIFT_ALM_N')]
     chans = []
+    # a status LED sits in series with each opto LED: lit when the switch or alarm conducts
+    labels = {'ESTOP_STAT_IN': 'ESTOP OK', 'BLEED_HOME_IN': 'BLEED HOME', 'LIFT_HOME_IN': 'LIFT HOME',
+              'LIFT_MAX_IN': 'LIFT MAX', 'ORIF_B0_IN': 'ORIF 0', 'ORIF_B1_IN': 'ORIF 1', 'ORIF_B2_IN': 'ORIF 2'}
     for src, out in field24:
-        b.R('4.7k', src, src + '_LED')          # about 5 mA from 24 V
+        b.R('4.7k', src, src + '_R')            # about 4 mA from 24 V
+        b.LED(labels[src], src + '_R', src + '_LED', color='green')
         chans.append((src + '_LED', 'GND', out))
     for st, out in alarms:
-        b.R('470R', '+5V', st + '_ALM_LED')      # iCL42 ALM is a normally open collector
+        b.R('470R', '+5V', st + '_ALM_R')        # iCL42 ALM is a normally open collector
+        b.LED(st + ' ALM', st + '_ALM_R', st + '_ALM_LED', color='red')
         chans.append((st + '_ALM_LED', st + '_ALM_P', out))
     while len(chans) < 12:
         chans.append((None, None, None))
@@ -347,8 +378,28 @@ def main_board(libdir):
     b.R('220k', '+5V', 'WD_RC')
     b.part('C', 'C', '2.2uF film/C0G-X7R', {1: 'WD_RC', 2: 'WD_CEXT'}, footprint=FP['C1206'])
     b.C('100nF', '+5V')
-    b.TP('WD_OK')
+    b.LED('WD OK', 'LED_WD_A', 'GND', color='yellow', r='1.5k', supply='WD_OK')
+    b.LED('ARMED', 'LED_ARMED_A', 'GND', color='red', r='10k', supply='COIL_24V_ESTOP')
+    for i in range(1, 7):            # lit while the TBD62083 pulls that coil on
+        b.LED('K%d' % i, 'LED_K%d_A' % i, 'COIL%d_RET' % i, color='yellow', r='10k', supply='COIL_24V_ESTOP')
 
+    # Net classes (track width and clearance in mm), for 1 oz copper. Widths follow
+    # IPC-2221 for about a 10 C rise on outer layers, with margin.
+    p.netclasses = [
+        dict(name='Power24', track=2.5, clearance=0.3, via=1.0, drill=0.5,        # up to ~6 A
+             nets=['+24V_RAW', '+24V']),
+        dict(name='Stepper24', track=1.2, clearance=0.3, via=0.8, drill=0.4,      # up to 3 A peak each
+             nets=['BLEED_24V', 'BLEED_24V_F', 'LIFT_24V', 'LIFT_24V_F']),
+        dict(name='Coil24', track=0.8, clearance=0.3, via=0.8, drill=0.4,         # 6 coils ~1.4 A total
+             nets=['COIL_24V', 'COIL_24V_ESTOP'] + ['COIL%d_RET' % i for i in range(1, 7)] + ['LAMP_RET']),
+        dict(name='Supply', track=0.8, clearance=0.2, via=0.8, drill=0.4,
+             nets=['+5V', '+12V', 'GND', 'MAF_12V']),
+        dict(name='Rail', track=0.5, clearance=0.2, via=0.6, drill=0.3,
+             nets=['+3V3', '+5VA']),
+        dict(name='Field24', track=0.4, clearance=0.3, via=0.6, drill=0.3,        # 24 V switch and E-stop wiring
+             nets=['+24V_FIELD', 'ESTOP_STAT_IN', 'BLEED_HOME_IN', 'LIFT_HOME_IN', 'LIFT_MAX_IN',
+                   'ORIF_B0_IN', 'ORIF_B1_IN', 'ORIF_B2_IN']),
+    ]
     nets, problems = p.check()
     return p, nets, problems
 

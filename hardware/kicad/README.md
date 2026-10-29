@@ -48,17 +48,69 @@ Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye
 
 `flowbench-main/place_rev_a.py` lays out the main board as a starting point for routing:
 
-- 220 × 160 mm outline, M3 mounting holes in the corners.
-- Top edge: 24 V input, stepper power and signals, motor-housing coils, lamp, E-stop. Bottom edge: MAF, current sensors, swirl, Digimatic, BME280, switches, orifice selector. The script turns each connector so its plug faces out.
-- DevKit antenna overhangs the left edge; WIZ850io RJ45 faces the right edge; ABP2 ports face the right edge.
-- ICs and modules at planned spots; every resistor, capacitor and small part packed next to the part it serves, at least 1 mm apart, for hand soldering.
+- 180 × 125 mm outline, M3 mounting holes in the corners, 1.0 mm between parts for hand soldering.
+- Connectors on all four edges, each turned so its plug faces out:
+  - **Top:** 24 V input, stepper power and signals, motor-housing coils.
+  - **Right:** lamp and E-stop; the WIZ850io RJ45 and the ABP2 ports also face this edge.
+  - **Bottom:** MAF, current sensors, swirl, Digimatic, BME280, bleed home switch.
+  - **Left:** orifice selector and lift switches; the DevKit antenna overhangs this edge.
+- ICs and modules at planned spots; every resistor, capacitor, LED and small part packed next to the part it serves.
+
+### Status LEDs (24)
+
+| Group | LEDs | Driven by |
+| --- | --- | --- |
+| Power (green) | +24V, +12V, +5V, +3V3 | The rail itself, about 2 mA |
+| Faults (red) | EFUSE FLT, BLEED ALM, LIFT ALM | eFuse fault output; in series with each stepper alarm opto |
+| Motors | WD OK, ARMED, BLEED PWR, LIFT PWR, K1–K6 | Watchdog output, coil supply after the E-stop, stepper supplies, each contactor coil while it's energised |
+| Inputs (green) | ESTOP OK, BLEED HOME, LIFT HOME, LIFT MAX, ORIF 0–2 | In series with each opto input: lit when the switch conducts |
+
+The LED labels print on the silkscreen. The DevKit's own RGB LED (GPIO38) is free for firmware status.
+
+### Test points, grouped by purpose and voltage
+
+| Area | Type | Points |
+| --- | --- | --- |
+| 24 V | Loops | +24V_RAW, +24V, BLEED_24V_F, LIFT_24V_F, COIL_24V_ESTOP, +24V_FIELD, GND |
+| Logic supplies | Loops | +12V, +5V, +5VA, +3V3, GND |
+| Controller | 2×8 header, GND row | ESP_RST, ESP_TX, ESP_RX, SDA, SCL, HEARTBEAT, WD_OK, EXP_INT_N |
+| Analog | 2×5 header, GND row | ADC2_AIN2, ADC2_AIN3, MAF_SIG_ADC, MAF_ID_ADC, CT_BIAS |
+| Digimatic | 2×3 header, GND row | DIGI_CLK, DIGI_DATA, DIGI_REQ |
+
+Fast lines (SPI, SD) have no test points: probe them at the WIZ850io and microSD pins, so no stubs are added.
 
 To run it:
 1. In the schematic: Tools → Update PCB from Schematic (F8). This brings in the four mounting holes as well.
 2. In the PCB editor: Tools → Scripting Console, then `exec(open(r"<path>/place_rev_a.py").read())`
 3. It prints how many parts it placed and lists any it couldn't.
 
+The script also:
+- keeps everything at least 3 mm clear of the mounting holes;
+- moves part values to the fabrication layer, so only references print on the silkscreen;
+- adds a GND plane on the bottom layer, notched under the DevKit antenna, with an antenna keepout on both layers.
+
 `placement-preview.png` is a simulation of the same placement, using approximate part sizes. The real result uses KiCad's actual footprint outlines, so expect small differences. Nothing is routed. Adjust placement by hand, then route (by hand, or with the Freerouting plugin as a first pass).
+
+## Routing setup
+
+The project file defines net classes, so KiCad's router and DRC use the right widths automatically (1 oz copper, about a 10 °C rise):
+
+| Class | Track | Clearance | Via | Nets |
+| --- | --- | --- | --- | --- |
+| Power24 | 2.5 mm | 0.3 mm | 1.0 / 0.5 mm | +24V_RAW, +24V (up to ~6 A) |
+| Stepper24 | 1.2 mm | 0.3 mm | 0.8 / 0.4 mm | Bleed and lift stepper 24 V (3 A peak) |
+| Coil24 | 0.8 mm | 0.3 mm | 0.8 / 0.4 mm | Coil supply, coil and lamp returns |
+| Supply | 0.8 mm | 0.2 mm | 0.8 / 0.4 mm | +5V, +12V, GND, MAF 12 V |
+| Rail | 0.5 mm | 0.2 mm | 0.6 / 0.3 mm | +3V3, +5VA |
+| Field24 | 0.4 mm | 0.3 mm | 0.6 / 0.3 mm | 24 V switch, orifice and E-stop wiring |
+| Default | 0.25 mm | 0.2 mm | 0.6 / 0.3 mm | All other signals |
+
+Routing tips:
+- Keep the bottom layer as an unbroken ground plane: route on top, and use the bottom only for short jumps. Most important under the SPI lines from the DevKit to the WIZ850io (about 13 cm) and the I2C lines.
+- Keep the analog area (ADS1219s, MAF and current-sensor inputs) away from the stepper and coil wiring.
+- Wide 24 V tracks: draw them first, then everything else.
+
+Schematic UUIDs are stable from this version on, so regenerating no longer breaks the link between the schematic and the PCB.
 
 ## Regenerating
 
@@ -70,4 +122,4 @@ python3 design.py /path/to/kicad-symbols ..
 cd .. && python3 tools/verify.py
 ```
 
-Regenerating replaces both projects (new UUIDs), so any hand edits in the schematic files would be lost.
+Regenerating rewrites both projects, so any hand edits in the schematic files would be lost. Symbol, sheet and root UUIDs are derived from the design, so the PCB stays linked.
