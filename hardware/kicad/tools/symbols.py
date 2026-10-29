@@ -113,6 +113,10 @@ def load(project, libdir):
         footprint='FlowBench:Honeywell_ABP2_DIP',
         datasheet='https://automation.honeywell.com/us/en/products/sensing-solutions/sensors/pressure-sensors/board-mount-pressure-sensors/basic-abp2-series',
         description='Honeywell ABP2 pressure sensor, DIP, I2C: 1 GND, 2 VDD, 3 EOC, 4 NC, 5 SDA, 6 SCL'))
+    S['ProtoArea'] = project.sym(rect_symbol(
+        'ProtoArea', 'PROTO', left=[('1', '+3V3 rail', 'passive'), ('2', '+5V rail', 'passive')],
+        bottom=[('3', 'GND rail', 'passive')], footprint='FlowBench:ProtoArea_10x7',
+        description='Prototyping grid, 2.54 mm plated holes: +3V3 row, +5V row, 4 free rows, GND row'))
     S['Pololu_D24V22Fx'] = project.sym(rect_symbol(
         'Pololu_D24V22Fx', 'PS',
         left=[('3', 'VIN', 'power_in'), ('2', 'EN', 'input')],

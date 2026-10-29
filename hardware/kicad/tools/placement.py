@@ -69,8 +69,8 @@ PLAN = [
     ('ADS1219 #1 (0x40)', 18, 100, 0, None),
     ('ADS1219 #2 (0x41)', 36, 100, 0, None),
     ('MCP6002', 53, 102, 0, None),
-    ('74LVC14 (5 V-tolerant inputs)', 92, 99, 0, None),
-    ('ATtiny1616-SN', 113, 99, 0, None),
+    ('74LVC14 (5 V-tolerant inputs)', 90, 100, 0, None),
+    ('ATtiny1616-SN', 112, 101, 0, None),
     ('UPDI', 129, 103, 90, None),
     # test-point areas, grouped by purpose and voltage
     ('+24V_RAW', 116, 43, 0, None), ('+24V', 122.35, 43, 0, None), ('BLEED_24V_F', 128.7, 43, 0, None),
@@ -80,8 +80,11 @@ PLAN = [
     ('GND#2', 35.32, 56, 0, None),
     ('Controller test header', 41, 57, 90, None),
     ('Analog test header', 58, 104, 90, None),
-    ('Digimatic test header', 106, 111, 90, None),
-    ('Expander 2 spare', 76, 111, 90, None),
+    ('Digimatic test header', 106, 113.5, 90, None),
+    # prototyping area (between the optocouplers and the mux) with its two headers on its right
+    ('Prototyping area', 97.5, 76, 0, None),
+    ('Expander 2 spare', 124.8, 77, 0, None),
+    ('I2C expansion (mux ch4-7)', 127.34, 77, 0, None),
     # mounting holes
     ('M3 mounting hole#1', 5, 5, 0, None),
     ('M3 mounting hole#2', W - 5, 5, 0, None),
