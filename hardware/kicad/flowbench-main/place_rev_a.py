@@ -177,8 +177,8 @@ ANCHORS = {
   None
  ],
  "U3": [
-  205,
-  56,
+  207,
+  44,
   270,
   None
  ],
@@ -304,8 +304,10 @@ ANCHORS = {
  ]
 }
 PASSIVES = [["F1", "J16"], ["Q1", "J16"], ["F2", "J18"], ["Q3", "J18"], ["Q5", "J21"], ["R10", "J21"], ["R9", "J21"], ["D1", "J6"], ["F4", "J6"], ["JP3", "J6"], ["R42", "J6"], ["R43", "J6"], ["R46", "J6"], ["R47", "J6"], ["R48", "J6"], ["R49", "J6"], ["R50", "J6"], ["R51", "J6"], ["C27", "J11"], ["R59", "J11"], ["R60", "J11"], ["R61", "J11"], ["R62", "J11"], ["R63", "J11"], ["R64", "J11"], ["R53", "J7"], ["R54", "J7"], ["R55", "J7"], ["R56", "J7"], ["JP4", "J12"], ["JP5", "J12"], ["Q7", "J12"], ["Q8", "J12"], ["Q9", "J12"], ["R65", "J12"], ["R66", "J12"], ["R67", "J12"], ["R68", "J12"], ["R69", "J12"], ["R70", "J12"], ["R72", "J12"], ["TP19", "J12"], ["TP20", "J12"], ["TP21", "J12"], ["C1", "PS2"], ["C2", "PS2"], ["C3", "PS2"], ["C4", "U1"], ["C5", "U1"], ["F3", "U1"], ["R1", "U1"], ["R2", "U1"], ["R5", "U1"], ["R6", "U1"], ["TP1", "U1"], ["TP2", "U1"], ["TP3", "U1"], ["TP4", "U1"], ["TP5", "U1"], ["TP6", "U1"], ["C38", "U18"], ["C39", "U19"], ["C40", "U21"], ["C41", "U21"], ["Q6", "U21"], ["R105", "U21"], ["R11", "U21"], ["R12", "U21"], ["TP22", "U21"], ["C29", "U2"], ["C30", "U2"], ["C31", "U2"], ["C32", "U2"], ["C33", "U2"], ["C34", "U2"], ["R13", "U2"], ["R14", "U2"], ["R15", "U2"], ["TP10", "U2"], ["TP11", "U2"], ["TP12", "U2"], ["TP7", "U2"], ["TP8", "U2"], ["TP9", "U2"], ["C8", "J4"], ["C9", "J4"], ["JP2", "J4"], ["R19", "J4"], ["R20", "J4"], ["R21", "J4"], ["R22", "J4"], ["R23", "J4"], ["R24", "J4"], ["R25", "J4"], ["R26", "J4"], ["R27", "J4"], ["TP14", "J4"], ["TP15", "J4"], ["TP16", "J4"], ["C6", "U3"], ["C7", "U3"], ["JP1", "U3"], ["R16", "U3"], ["R17", "U3"], ["R18", "U3"], ["TP13", "U3"], ["Q2", "U13"], ["R3", "U13"], ["R4", "U13"], ["R73", "U13"], ["R74", "U13"], ["R75", "U13"], ["R76", "U13"], ["R77", "U13"], ["R78", "U13"], ["R79", "U13"], ["R80", "U13"], ["R81", "U13"], ["R83", "U13"], ["R85", "U13"], ["R86", "U13"], ["R87", "U13"], ["R88", "U13"], ["R89", "U13"], ["C36", "U14"], ["C37", "U14"], ["Q4", "U14"], ["R7", "U14"], ["R8", "U14"], ["R82", "U14"], ["R84", "U14"], ["R90", "U14"], ["R91", "U14"], ["R92", "U14"], ["R93", "U14"], ["R94", "U14"], ["R95", "U14"], ["R96", "U15"], ["R97", "U15"], ["R98", "U15"], ["R99", "U15"], ["R100", "U16"], ["R101", "U16"], ["R102", "U16"], ["R103", "U16"], ["R104", "U17"], ["C10", "U4"], ["R28", "U4"], ["R29", "U4"], ["R30", "U4"], ["R31", "U4"], ["R32", "U4"], ["R33", "U4"], ["R34", "U4"], ["R35", "U4"], ["R36", "U4"], ["C11", "U5"], ["C12", "U6"], ["C13", "U7"], ["C19", "U8"], ["C20", "U8"], ["C22", "U8"], ["C23", "U8"], ["D2", "U8"], ["R37", "U8"], ["R38", "U8"], ["R39", "U8"], ["R40", "U8"], ["R41", "U8"], ["R44", "U8"], ["R45", "U8"], ["C14", "U9"], ["C15", "U9"], ["C16", "U9"], ["C17", "U9"], ["C18", "U9"], ["C21", "U9"], ["C24", "U9"], ["D3", "U9"], ["TP17", "U9"], ["TP18", "U9"], ["C26", "U11"], ["C28", "U11"], ["R57", "U11"], ["R58", "U11"], ["C25", "U10"], ["R52", "U10"], ["C35", "U12"], ["R71", "U12"]]
+ANTENNA = (69.8, 100.8, 5.0)   # y from, y to, x to: DevKit antenna band at the left edge
 GAP = 1.0        # mm between part outlines
 MARGIN = 2.0     # mm from the board edge
+HOLE_KEEP = 3.0  # extra mm kept clear around mounting holes (screw heads, standoffs)
 
 B = pcbnew.GetBoard()
 mm, tomm = pcbnew.FromMM, pcbnew.ToMM
@@ -385,7 +387,10 @@ for ref, (x, y, rot, edge) in ANCHORS.items():
         dx = x - b[0]
         dy = (0.5 - b[1]) if edge == 'top' else (H - 0.5 - b[3])
         shift(fp, dx, dy)
-    placed.append(bbox(fp))
+    b = bbox(fp)
+    if ref.startswith('H'):
+        b = [b[0] - HOLE_KEEP, b[1] - HOLE_KEEP, b[2] + HOLE_KEEP, b[3] + HOLE_KEEP]
+    placed.append(b)
 
 # passives: nearest free spot around their anchor, spiralling outward
 for ref, anchor in PASSIVES:
@@ -426,7 +431,49 @@ for ref, anchor in PASSIVES:
     if not done:
         missing.append(ref + ' (no room)')
 
+# part values to the fabrication layer: they stay visible in KiCad but don't print
+for fp in B.GetFootprints():
+    try:
+        fp.Value().SetLayer(pcbnew.F_Fab)
+    except Exception:
+        pass
+
+# ground plane on the bottom layer, with a notch under the DevKit antenna, plus an
+# antenna keepout on both layers so no track or pour goes under it
+def poly_zone(name, layer, pts, net=None, rule_area=False):
+    z = pcbnew.ZONE(B)
+    z.SetLayer(layer)
+    ol = z.Outline()
+    ol.NewOutline()
+    for x, y in pts:
+        ol.Append(mm(x), mm(y))
+    z.SetZoneName(name)
+    if rule_area:
+        z.SetIsRuleArea(True)
+        z.SetDoNotAllowCopperPour(True)
+        z.SetDoNotAllowTracks(True)
+        z.SetDoNotAllowVias(True)
+    elif net is not None:
+        z.SetNet(net)
+    B.Add(z)
+    return z
+
+zones_note = ''
+try:
+    for z in list(B.Zones()):
+        if z.GetZoneName() in ('GND plane', 'Antenna keepout'):
+            B.Remove(z)
+    ay0, ay1, ax1 = ANTENNA
+    gnd = B.FindNet('GND')
+    poly_zone('GND plane', pcbnew.B_Cu, [(0, 0), (W, 0), (W, H), (0, H), (0, ay1), (ax1, ay1), (ax1, ay0), (0, ay0)], gnd)
+    for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
+        poly_zone('Antenna keepout', layer, [(0, ay0), (ax1, ay0), (ax1, ay1), (0, ay1)], rule_area=True)
+    pcbnew.ZONE_FILLER(B).Fill(B.Zones())
+    zones_note = ' Ground plane added on B.Cu and filled.'
+except Exception as e:
+    zones_note = ' Ground plane not added (%s): add a GND zone on B.Cu by hand.' % e
+
 pcbnew.Refresh()
-print('Placed %d anchors and %d passives.' % (len(ANCHORS), len(PASSIVES)))
+print('Placed %d anchors and %d passives.%s' % (len(ANCHORS), len(PASSIVES), zones_note))
 if missing:
     print('Not placed:', ', '.join(missing))

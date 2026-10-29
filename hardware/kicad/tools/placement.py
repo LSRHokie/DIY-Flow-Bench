@@ -50,7 +50,7 @@ PLAN = [
     ('ESP32-S3-DevKitC-1-N32R8V', 6, 98, 90, None),
     ('microSD push-push', 72, 104, 0, None),
     # Ethernet: RJ45 toward the right edge
-    ('WIZ850io', 205, 56, 270, None),
+    ('WIZ850io', 207, 44, 270, None),
     # expanders and optocouplers (middle)
     ('TCA9535PWR #1 (0x20)', 92, 62, 0, None),
     ('TCA9535PWR #2 (0x21)', 124, 62, 0, None),
@@ -155,8 +155,10 @@ import pcbnew
 W, H = %(W)s, %(H)s
 ANCHORS = %(anchors)s
 PASSIVES = %(passives)s
+ANTENNA = (69.8, 100.8, 5.0)   # y from, y to, x to: DevKit antenna band at the left edge
 GAP = 1.0        # mm between part outlines
 MARGIN = 2.0     # mm from the board edge
+HOLE_KEEP = 3.0  # extra mm kept clear around mounting holes (screw heads, standoffs)
 
 B = pcbnew.GetBoard()
 mm, tomm = pcbnew.FromMM, pcbnew.ToMM
@@ -236,7 +238,10 @@ for ref, (x, y, rot, edge) in ANCHORS.items():
         dx = x - b[0]
         dy = (0.5 - b[1]) if edge == 'top' else (H - 0.5 - b[3])
         shift(fp, dx, dy)
-    placed.append(bbox(fp))
+    b = bbox(fp)
+    if ref.startswith('H'):
+        b = [b[0] - HOLE_KEEP, b[1] - HOLE_KEEP, b[2] + HOLE_KEEP, b[3] + HOLE_KEEP]
+    placed.append(b)
 
 # passives: nearest free spot around their anchor, spiralling outward
 for ref, anchor in PASSIVES:
@@ -277,8 +282,50 @@ for ref, anchor in PASSIVES:
     if not done:
         missing.append(ref + ' (no room)')
 
+# part values to the fabrication layer: they stay visible in KiCad but don't print
+for fp in B.GetFootprints():
+    try:
+        fp.Value().SetLayer(pcbnew.F_Fab)
+    except Exception:
+        pass
+
+# ground plane on the bottom layer, with a notch under the DevKit antenna, plus an
+# antenna keepout on both layers so no track or pour goes under it
+def poly_zone(name, layer, pts, net=None, rule_area=False):
+    z = pcbnew.ZONE(B)
+    z.SetLayer(layer)
+    ol = z.Outline()
+    ol.NewOutline()
+    for x, y in pts:
+        ol.Append(mm(x), mm(y))
+    z.SetZoneName(name)
+    if rule_area:
+        z.SetIsRuleArea(True)
+        z.SetDoNotAllowCopperPour(True)
+        z.SetDoNotAllowTracks(True)
+        z.SetDoNotAllowVias(True)
+    elif net is not None:
+        z.SetNet(net)
+    B.Add(z)
+    return z
+
+zones_note = ''
+try:
+    for z in list(B.Zones()):
+        if z.GetZoneName() in ('GND plane', 'Antenna keepout'):
+            B.Remove(z)
+    ay0, ay1, ax1 = ANTENNA
+    gnd = B.FindNet('GND')
+    poly_zone('GND plane', pcbnew.B_Cu, [(0, 0), (W, 0), (W, H), (0, H), (0, ay1), (ax1, ay1), (ax1, ay0), (0, ay0)], gnd)
+    for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
+        poly_zone('Antenna keepout', layer, [(0, ay0), (ax1, ay0), (ax1, ay1), (0, ay1)], rule_area=True)
+    pcbnew.ZONE_FILLER(B).Fill(B.Zones())
+    zones_note = ' Ground plane added on B.Cu and filled.'
+except Exception as e:
+    zones_note = ' Ground plane not added (%%s): add a GND zone on B.Cu by hand.' %% e
+
 pcbnew.Refresh()
-print('Placed %%d anchors and %%d passives.' %% (len(ANCHORS), len(PASSIVES)))
+print('Placed %%d anchors and %%d passives.%%s' %% (len(ANCHORS), len(PASSIVES), zones_note))
 if missing:
     print('Not placed:', ', '.join(missing))
 '''

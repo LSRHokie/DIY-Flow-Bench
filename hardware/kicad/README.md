@@ -58,7 +58,33 @@ To run it:
 2. In the PCB editor: Tools → Scripting Console, then `exec(open(r"<path>/place_rev_a.py").read())`
 3. It prints how many parts it placed and lists any it couldn't.
 
+The script also:
+- keeps everything at least 3 mm clear of the mounting holes;
+- moves part values to the fabrication layer, so only references print on the silkscreen;
+- adds a GND plane on the bottom layer, notched under the DevKit antenna, with an antenna keepout on both layers.
+
 `placement-preview.png` is a simulation of the same placement, using approximate part sizes. The real result uses KiCad's actual footprint outlines, so expect small differences. Nothing is routed. Adjust placement by hand, then route (by hand, or with the Freerouting plugin as a first pass).
+
+## Routing setup
+
+The project file defines net classes, so KiCad's router and DRC use the right widths automatically (1 oz copper, about a 10 °C rise):
+
+| Class | Track | Clearance | Via | Nets |
+| --- | --- | --- | --- | --- |
+| Power24 | 2.5 mm | 0.3 mm | 1.0 / 0.5 mm | +24V_RAW, +24V (up to ~6 A) |
+| Stepper24 | 1.2 mm | 0.3 mm | 0.8 / 0.4 mm | Bleed and lift stepper 24 V (3 A peak) |
+| Coil24 | 0.8 mm | 0.3 mm | 0.8 / 0.4 mm | Coil supply, coil and lamp returns |
+| Supply | 0.8 mm | 0.2 mm | 0.8 / 0.4 mm | +5V, +12V, GND, MAF 12 V |
+| Rail | 0.5 mm | 0.2 mm | 0.6 / 0.3 mm | +3V3, +5VA |
+| Field24 | 0.4 mm | 0.3 mm | 0.6 / 0.3 mm | 24 V switch, orifice and E-stop wiring |
+| Default | 0.25 mm | 0.2 mm | 0.6 / 0.3 mm | All other signals |
+
+Routing tips:
+- Keep the bottom layer as an unbroken ground plane: route on top, and use the bottom only for short jumps. Most important under the SPI lines from the DevKit to the WIZ850io (about 13 cm) and the I2C lines.
+- Keep the analog area (ADS1219s, MAF and current-sensor inputs) away from the stepper and coil wiring.
+- Wide 24 V tracks: draw them first, then everything else.
+
+Schematic UUIDs are stable from this version on, so regenerating no longer breaks the link between the schematic and the PCB.
 
 ## Regenerating
 
@@ -70,4 +96,4 @@ python3 design.py /path/to/kicad-symbols ..
 cd .. && python3 tools/verify.py
 ```
 
-Regenerating replaces both projects (new UUIDs), so any hand edits in the schematic files would be lost.
+Regenerating rewrites both projects, so any hand edits in the schematic files would be lost. Symbol, sheet and root UUIDs are derived from the design, so the PCB stays linked.

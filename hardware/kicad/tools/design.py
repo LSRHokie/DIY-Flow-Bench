@@ -349,6 +349,23 @@ def main_board(libdir):
     b.C('100nF', '+5V')
     b.TP('WD_OK')
 
+    # Net classes (track width and clearance in mm), for 1 oz copper. Widths follow
+    # IPC-2221 for about a 10 C rise on outer layers, with margin.
+    p.netclasses = [
+        dict(name='Power24', track=2.5, clearance=0.3, via=1.0, drill=0.5,        # up to ~6 A
+             nets=['+24V_RAW', '+24V']),
+        dict(name='Stepper24', track=1.2, clearance=0.3, via=0.8, drill=0.4,      # up to 3 A peak each
+             nets=['BLEED_24V', 'BLEED_24V_F', 'LIFT_24V', 'LIFT_24V_F']),
+        dict(name='Coil24', track=0.8, clearance=0.3, via=0.8, drill=0.4,         # 6 coils ~1.4 A total
+             nets=['COIL_24V', 'COIL_24V_ESTOP'] + ['COIL%d_RET' % i for i in range(1, 7)] + ['LAMP_RET']),
+        dict(name='Supply', track=0.8, clearance=0.2, via=0.8, drill=0.4,
+             nets=['+5V', '+12V', 'GND', 'MAF_12V']),
+        dict(name='Rail', track=0.5, clearance=0.2, via=0.6, drill=0.3,
+             nets=['+3V3', '+5VA']),
+        dict(name='Field24', track=0.4, clearance=0.3, via=0.6, drill=0.3,        # 24 V switch and E-stop wiring
+             nets=['+24V_FIELD', 'ESTOP_STAT_IN', 'BLEED_HOME_IN', 'LIFT_HOME_IN', 'LIFT_MAX_IN',
+                   'ORIF_B0_IN', 'ORIF_B1_IN', 'ORIF_B2_IN']),
+    ]
     nets, problems = p.check()
     return p, nets, problems
 
