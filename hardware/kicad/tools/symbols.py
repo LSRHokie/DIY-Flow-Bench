@@ -21,6 +21,7 @@ FP = {
     'JP2B': 'Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm',
     'JP2O': 'Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm',
     'JP3B': 'Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm',
+    'LED': 'LED_SMD:LED_0805_2012Metric',
 }
 
 
@@ -56,7 +57,8 @@ def load(project, libdir):
 
     for n in ['R', 'C', 'C_Polarized', 'Polyfuse', 'D_TVS', 'BAV99', 'TestPoint', 'PWR_FLAG',
               'SolderJumper_2_Bridged', 'SolderJumper_2_Open', 'SolderJumper_3_Bridged12',
-              'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det', 'MountingHole']:
+              'Q_NPN_BEC', 'Q_NMOS_GSD', 'Q_NMOS_GDS', 'Q_PMOS_GDS', 'Micro_SD_Card_Det', 'MountingHole', 'LED',
+              'Conn_02x03_Odd_Even', 'Conn_02x05_Odd_Even', 'Conn_02x08_Odd_Even']:
         conv(n)
     # The Hirose DM3AT footprint names its shield pads "SH"; match the symbol's shield pin to it.
     for pin in S['Micro_SD_Card_Det'].pins:

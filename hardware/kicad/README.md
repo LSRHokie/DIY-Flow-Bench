@@ -48,10 +48,36 @@ Symbols converted from KiCad's library keep KiCad's pinouts. These need your eye
 
 `flowbench-main/place_rev_a.py` lays out the main board as a starting point for routing:
 
-- 220 × 160 mm outline, M3 mounting holes in the corners.
-- Top edge: 24 V input, stepper power and signals, motor-housing coils, lamp, E-stop. Bottom edge: MAF, current sensors, swirl, Digimatic, BME280, switches, orifice selector. The script turns each connector so its plug faces out.
-- DevKit antenna overhangs the left edge; WIZ850io RJ45 faces the right edge; ABP2 ports face the right edge.
-- ICs and modules at planned spots; every resistor, capacitor and small part packed next to the part it serves, at least 1 mm apart, for hand soldering.
+- 180 × 125 mm outline, M3 mounting holes in the corners, 1.0 mm between parts for hand soldering.
+- Connectors on all four edges, each turned so its plug faces out:
+  - **Top:** 24 V input, stepper power and signals, motor-housing coils.
+  - **Right:** lamp and E-stop; the WIZ850io RJ45 and the ABP2 ports also face this edge.
+  - **Bottom:** MAF, current sensors, swirl, Digimatic, BME280, bleed home switch.
+  - **Left:** orifice selector and lift switches; the DevKit antenna overhangs this edge.
+- ICs and modules at planned spots; every resistor, capacitor, LED and small part packed next to the part it serves.
+
+### Status LEDs (24)
+
+| Group | LEDs | Driven by |
+| --- | --- | --- |
+| Power (green) | +24V, +12V, +5V, +3V3 | The rail itself, about 2 mA |
+| Faults (red) | EFUSE FLT, BLEED ALM, LIFT ALM | eFuse fault output; in series with each stepper alarm opto |
+| Motors | WD OK, ARMED, BLEED PWR, LIFT PWR, K1–K6 | Watchdog output, coil supply after the E-stop, stepper supplies, each contactor coil while it's energised |
+| Inputs (green) | ESTOP OK, BLEED HOME, LIFT HOME, LIFT MAX, ORIF 0–2 | In series with each opto input: lit when the switch conducts |
+
+The LED labels print on the silkscreen. The DevKit's own RGB LED (GPIO38) is free for firmware status.
+
+### Test points, grouped by purpose and voltage
+
+| Area | Type | Points |
+| --- | --- | --- |
+| 24 V | Loops | +24V_RAW, +24V, BLEED_24V_F, LIFT_24V_F, COIL_24V_ESTOP, +24V_FIELD, GND |
+| Logic supplies | Loops | +12V, +5V, +5VA, +3V3, GND |
+| Controller | 2×8 header, GND row | ESP_RST, ESP_TX, ESP_RX, SDA, SCL, HEARTBEAT, WD_OK, EXP_INT_N |
+| Analog | 2×5 header, GND row | ADC2_AIN2, ADC2_AIN3, MAF_SIG_ADC, MAF_ID_ADC, CT_BIAS |
+| Digimatic | 2×3 header, GND row | DIGI_CLK, DIGI_DATA, DIGI_REQ |
+
+Fast lines (SPI, SD) have no test points: probe them at the WIZ850io and microSD pins, so no stubs are added.
 
 To run it:
 1. In the schematic: Tools → Update PCB from Schematic (F8). This brings in the four mounting holes as well.
